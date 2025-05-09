@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#0F4C75</color>
+    <color name="blue200">#60A0EF</color>
+    <color name="textfieldColor">#E7F4FD</color>
+    <!-- <color name="buttonColor">#</color> -->
+    <color name="blackColor">#282a33</color>
+    <color name="lightGrey">#ededed</color>
+    <color name="whiteColor">#ffffff</color>
+    <color name="buttonDisabled">#205376</color>
+    <color name="mainGrey">#B8B8B8</color>
+</resources>

@@ -37,7 +37,8 @@ class _ProductDetailsState extends State<ProductDetails> {
         backgroundColor: ColorName.blue200,
         centerTitle: true,
         title: AppText.medium(
-          'Product Detail',
+          'Product Details',
+          color: Colors.white,
         ),
       ),
       body: BlocConsumer<ProductsCubit, ProductsState>(
@@ -50,14 +51,8 @@ class _ProductDetailsState extends State<ProductDetails> {
         },
         builder: (context, state) {
           if (state is ProductsLoading) {
-            return SpinKitWave(
-              itemBuilder: (BuildContext context, int index) {
-                return const DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: ColorName.primaryColor,
-                  ),
-                );
-              },
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           } else if (state is ProductsError) {
             return Center(
@@ -66,107 +61,106 @@ class _ProductDetailsState extends State<ProductDetails> {
           } else if (state is ProductsSingleLoaded) {
             var data = state.data;
             return SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    DetailsSection(
-                      image: data.imageUrl,
-                      tiles: [
-                        DetailTile(
-                          title: 'Name',
-                          trailing: data.name!,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20.h),
+                  // Product Icon
+                  Image.asset(
+                    'assets/images/products/productdetail.png',
+                    height: 100,
+                    width: 100,
+                  ),
+                  SizedBox(height: 20.h),
+                  // Product Details Grid
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      children: [
+                        _buildDetailRow('Name', data.name ?? 'N/A'),
+                        _buildDetailRow(
+                            'Category', data.category?.name ?? 'N/A'),
+                        _buildDetailRow(
+                          'Size',
+                          data.size != null && data.unit != null
+                              ? '${data.size} ${data.unit}'
+                              : 'N/A',
                         ),
-                        DetailTile(
-                          title: 'Product Type',
-                          trailing: data.productType!,
+                        _buildDetailRow(
+                          'Selling Price',
+                          data.sellingPrice != null
+                              ? '${data.sellingPrice}'
+                              : 'N/A',
                         ),
-                        DetailTile(
-                          title: 'Size',
-                          trailing:
-                              '${data.size.toString()} ${data.unit.toString()}',
+                        _buildDetailRow(
+                          'Buying Price',
+                          data.buyingPrice != null
+                              ? '${data.buyingPrice}'
+                              : 'N/A',
                         ),
-                        DetailTile(
-                          title: 'Buying Price',
-                          trailing: data.buyingPrice.toString(),
+                        _buildDetailRow(
+                          'Stock',
+                          data.stock != null ? '${data.stock}' : 'N/A',
                         ),
-                        DetailTile(
-                          title: 'Selling Price',
-                          trailing: data.sellingPrice.toString(),
-                        ),
-                        DetailTile(
-                          title: 'Date Added',
-                          trailing: convertToHumanReadableDate(
-                              data.createdAt.toString()),
-                        ),
-                        DetailTile(
-                          title: 'Description',
-                          trailing: data.description!,
-                        )
                       ],
                     ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          return Container();
-        },
-      ),
-      floatingActionButton: BlocBuilder<ProductsCubit, ProductsState>(
-        bloc: productsCubit,
-        builder: (context, state) {
-          if (state is ProductsSingleLoaded) {
-            return Container(
-              margin: EdgeInsets.only(left: 30.w, right: 10.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: CustomButton(
-                        onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddProduct(
-                                data: state.data,
-                              ),
-                            ),
-                          );
-                          if (result != null && result == true) {
-                            productsCubit.getSingleProduct(widget.productId);
-                          }
-                        },
-                        text: "Edit"),
                   ),
-                  SizedBox(
-                    width: 150,
-                    child: CustomButton(
-                      onTap: () => _showMyDialog(context, widget.productId),
-                      text: "Delete",
-                      color: Colors.red,
+                  SizedBox(height: 20.h),
+                 // Edit and Delete Buttons
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddProduct(data: data),
+                              ),
+                            );
+                            if (result != null && result == true) {
+                              productsCubit.getSingleProduct(widget.productId);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 10,
+                            ),
+                          ),
+                          child: AppText.medium(
+                            'Edit Product',
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        ElevatedButton(
+                          onPressed: () =>
+                              _showMyDialog(context, widget.productId),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 10,
+                            ),
+                          ),
+                          child: AppText.medium(
+                            'Delete Product',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             );
           }
-
           return Container();
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
   }
 
@@ -176,28 +170,29 @@ class _ProductDetailsState extends State<ProductDetails> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Data'),
-          content: const SingleChildScrollView(
+          title: AppText.medium('Delete Data'),
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Would you like to remove the Product ?'),
+                AppText.small('Would you like to remove the Product?'),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-                style: ButtonStyle(
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                  overlayColor:
-                      WidgetStateProperty.all<Color>(Colors.redAccent),
-                ),
-                child: const Text('Remove'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await productsCubit.deleteProduct(id);
-                }),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                overlayColor:
+                    MaterialStateProperty.all<Color>(Colors.redAccent),
+              ),
+              child: AppText.medium('Remove', color: Colors.red),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await productsCubit.deleteProduct(id);
+              },
+            ),
             TextButton(
-              child: const Text('Cancel'),
+              child: AppText.medium('Cancel', color: Colors.black),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -205,6 +200,26 @@ class _ProductDetailsState extends State<ProductDetails> {
           ],
         );
       },
+    );
+  }
+
+  // Helper method to build a detail row
+  Widget _buildDetailRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          AppText.medium(
+            '$title :',
+            color: Colors.black,
+          ),
+          AppText.medium(
+            value,
+            color: Colors.black,
+          ),
+        ],
+      ),
     );
   }
 }

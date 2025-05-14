@@ -44,6 +44,7 @@ class SuppliesModelRow {
   DateTime? createdAt;
   DateTime? updatedAt;
   Supplier? supplier;
+  List<SupplyItem>? supplyItems; // Added supplyItems field
 
   SuppliesModelRow({
     this.id,
@@ -55,6 +56,7 @@ class SuppliesModelRow {
     this.createdAt,
     this.updatedAt,
     this.supplier,
+    this.supplyItems, // Initialize supplyItems
   });
 
   factory SuppliesModelRow.fromJson(Map<String, dynamic> json) =>
@@ -74,6 +76,10 @@ class SuppliesModelRow {
         supplier: json["supplier"] == null
             ? null
             : Supplier.fromJson(json["supplier"]),
+        supplyItems: json["supplyItems"] == null
+            ? []
+            : List<SupplyItem>.from(
+                json["supplyItems"].map((x) => SupplyItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,6 +92,9 @@ class SuppliesModelRow {
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "supplier": supplier?.toJson(),
+        "supplyItems": supplyItems == null
+            ? []
+            : List<dynamic>.from(supplyItems!.map((x) => x.toJson())),
       };
 }
 
@@ -167,5 +176,86 @@ class SupplyProduct {
         'supplyPrice': supplyPrice,
         'quantity': quantity,
         'productName': productName,
+      };
+}
+
+class SupplyItem {
+  String? id;
+  String? supplyId;
+  String? productId;
+  String? productBp;
+  String? supplyPrice;
+  String? quantity;
+  String? totalAmount;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  Product? product;
+
+  SupplyItem({
+    this.id,
+    this.supplyId,
+    this.productId,
+    this.productBp,
+    this.supplyPrice,
+    this.quantity,
+    this.totalAmount,
+    this.createdAt,
+    this.updatedAt,
+    this.product,
+  });
+
+  factory SupplyItem.fromJson(Map<String, dynamic> json) => SupplyItem(
+        id: json["id"],
+        supplyId: json["supplyId"],
+        productId: json["productId"],
+        productBp: json["productBp"],
+        supplyPrice: json["supplyPrice"],
+        quantity: json["quantity"],
+        totalAmount: json["totalAmount"],
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.parse(json["createdAt"]),
+        updatedAt: json["updatedAt"] == null
+            ? null
+            : DateTime.parse(json["updatedAt"]),
+        product:
+            json["product"] == null ? null : Product.fromJson(json["product"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "supplyId": supplyId,
+        "productId": productId,
+        "productBp": productBp,
+        "supplyPrice": supplyPrice,
+        "quantity": quantity,
+        "totalAmount": totalAmount,
+        "createdAt": createdAt?.toIso8601String(),
+        "updatedAt": updatedAt?.toIso8601String(),
+        "product": product?.toJson(),
+      };
+}
+
+class Product {
+  String? id;
+  String? name;
+  String? description;
+
+  Product({
+    this.id,
+    this.name,
+    this.description,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) => Product(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
       };
 }

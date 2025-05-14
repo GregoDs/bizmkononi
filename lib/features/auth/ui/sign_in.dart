@@ -112,7 +112,7 @@ class _SignInState extends State<SignIn> {
                     _isNavigating = true;
 
                     // Navigate to the home page after a delay
-                    Future.delayed(const Duration(seconds: 60), () {
+                    Future.delayed(const Duration(seconds: 3), () {
                       showSuccess(context, 'Sign In Success, Welcome');
                       Navigator.pushReplacementNamed(
                           context, Routes.landingScreen);

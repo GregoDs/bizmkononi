@@ -222,9 +222,33 @@ class _AddProductState extends State<AddProduct> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                height: 20.h,
+                              SizedBox(height: 20.h),
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 38,
+                                  backgroundColor:
+                                      ColorName.primaryColor.withOpacity(0.1),
+                                  child: Icon(
+                                    Icons.shopping_bag,
+                                    size: 48,
+                                    color: ColorName.primaryColor,
+                                  ),
+                                ),
                               ),
+                              SizedBox(height: 10.h),
+                              Center(
+                                child: AppText.medium(
+                                  widget.data == null
+                                      ? 'Add Product'
+                                      : 'Edit Product',
+                                  color: ColorName.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22.sp,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Divider(thickness: 1, color: ColorName.lightGrey),
+                              SizedBox(height: 10.h),
                               AppText.medium(
                                 'Name',
                                 color: Colors.black,
@@ -239,6 +263,8 @@ class _AddProductState extends State<AddProduct> {
                                 fillColor: ColorName.textfieldColor,
                                 validator:
                                     Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(Icons.shopping_bag,
+                                    color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -250,122 +276,138 @@ class _AddProductState extends State<AddProduct> {
                               SizedBox(
                                 height: 5.h,
                               ),
-                              Container(
-                                width: ScreenUtil().screenWidth,
-                                height: ScreenUtil().setHeight(50),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: ColorName.textfieldColor,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border:
-                                      Border.all(color: ColorName.blackColor),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: BlocBuilder<CategoryCubit,
-                                              CategoryState>(
-                                            bloc: categoryCubit,
-                                            builder: (context, state) {
-                                              if (state is CategoriesLoaded) {
-                                                return BlocBuilder<
-                                                    SelectedCategoryCubit,
-                                                    CategoryModelRow?>(
-                                                  bloc: selectedCategoryCubit,
-                                                  builder:
-                                                      (context, selectedState) {
-                                                    final selectedCategory =
-                                                        selectedCategoryCubit
-                                                            .state;
-                                                    final selectedCategoryName =
-                                                        selectedCategory
-                                                                ?.name ??
-                                                            'Select Category';
-                                                    return DropdownButtonHideUnderline(
-                                                      child: DropdownButton<
-                                                          CategoryModelRow>(
-                                                        value: selectedCategory,
-                                                        items: state.data.map<
-                                                            DropdownMenuItem<
-                                                                CategoryModelRow>>(
-                                                          (CategoryModelRow
-                                                              category) {
-                                                            return DropdownMenuItem<
+                              Row(
+                                children: [
+                                  Icon(Icons.category,
+                                      color: ColorName.primaryColor),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Container(
+                                      width: ScreenUtil().screenWidth,
+                                      height: ScreenUtil().setHeight(50),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      decoration: BoxDecoration(
+                                        color: ColorName.textfieldColor,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                            color: ColorName.blackColor),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
+                                                child: BlocBuilder<CategoryCubit,
+                                                    CategoryState>(
+                                                  bloc: categoryCubit,
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is CategoriesLoaded) {
+                                                      return BlocBuilder<
+                                                          SelectedCategoryCubit,
+                                                          CategoryModelRow?>(
+                                                        bloc:
+                                                            selectedCategoryCubit,
+                                                        builder: (context,
+                                                            selectedState) {
+                                                          final selectedCategory =
+                                                              selectedCategoryCubit
+                                                                  .state;
+                                                          final selectedCategoryName =
+                                                              selectedCategory
+                                                                      ?.name ??
+                                                                  'Select Category';
+                                                          return DropdownButtonHideUnderline(
+                                                            child: DropdownButton<
                                                                 CategoryModelRow>(
-                                                              value: category,
-                                                              child: Text(
-                                                                category.name ??
-                                                                    '',
-                                                                style:
-                                                                    const TextStyle(
+                                                              value:
+                                                                  selectedCategory,
+                                                              items: state.data.map<
+                                                                  DropdownMenuItem<
+                                                                      CategoryModelRow>>(
+                                                                (CategoryModelRow
+                                                                    category) {
+                                                                  return DropdownMenuItem<
+                                                                      CategoryModelRow>(
+                                                                    value:
+                                                                        category,
+                                                                    child: Text(
+                                                                      category
+                                                                              .name ??
+                                                                          '',
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        color: ColorName
+                                                                            .blackColor,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ).toList(),
+                                                              onChanged:
+                                                                  (CategoryModelRow?
+                                                                      newValue) {
+                                                                selectedCategoryCubit
+                                                                    .setSelectedCategory(
+                                                                  newValue,
+                                                                );
+                                                                formValidationCubit
+                                                                    .validateField(
+                                                                        categoryKey,
+                                                                        true);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .arrow_drop_down,
                                                                   color: ColorName
-                                                                      .blackColor,
+                                                                      .blackColor),
+                                                              iconSize: 24,
+                                                              isExpanded: true,
+                                                              underline:
+                                                                  const SizedBox(),
+                                                              hint: Text(
+                                                                selectedCategoryName,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: ColorName
+                                                                      .mainGrey,
+                                                                  fontSize:
+                                                                      14.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .normal,
                                                                 ),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
                                                               ),
-                                                            );
-                                                          },
-                                                        ).toList(),
-                                                        onChanged:
-                                                            (CategoryModelRow?
-                                                                newValue) {
-                                                          selectedCategoryCubit
-                                                              .setSelectedCategory(
-                                                            newValue,
+                                                            ),
                                                           );
-                                                          formValidationCubit
-                                                              .validateField(
-                                                                  categoryKey,
-                                                                  true);
                                                         },
-                                                        icon: const Icon(
-                                                            Icons
-                                                                .arrow_drop_down,
-                                                            color: ColorName
-                                                                .blackColor),
-                                                        iconSize: 24,
-                                                        isExpanded: true,
-                                                        underline:
-                                                            const SizedBox(),
-                                                        hint: Text(
-                                                          selectedCategoryName,
-                                                          style: TextStyle(
-                                                            color: ColorName
-                                                                .mainGrey,
-                                                            fontSize: 14.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
+                                                      );
+                                                    } else {
+                                                      return const Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      );
+                                                    }
                                                   },
-                                                );
-                                              } else {
-                                                return const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                );
-                                              }
-                                            },
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -468,6 +510,8 @@ class _AddProductState extends State<AddProduct> {
                                 fillColor: ColorName.textfieldColor,
                                 validator:
                                     Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(Icons.straighten,
+                                    color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -486,12 +530,14 @@ class _AddProductState extends State<AddProduct> {
                                 fillColor: ColorName.textfieldColor,
                                 validator:
                                     Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(Icons.line_weight,
+                                    color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Description',
+                                'Description (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -513,6 +559,8 @@ class _AddProductState extends State<AddProduct> {
                                       descrKey, value.isNotEmpty);
                                 },
                                 decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.description,
+                                      color: ColorName.primaryColor),
                                   hintText:
                                       "Write a summary and any detail about your Product",
                                   hintStyle: TextStyle(
@@ -547,7 +595,7 @@ class _AddProductState extends State<AddProduct> {
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Buying Price e.g 1000',
+                                'Buying Price e.g 1000(Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -561,6 +609,8 @@ class _AddProductState extends State<AddProduct> {
                                 fillColor: ColorName.textfieldColor,
                                 validator:
                                     Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(Icons.attach_money,
+                                    color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -580,12 +630,14 @@ class _AddProductState extends State<AddProduct> {
                                 fillColor: ColorName.textfieldColor,
                                 validator:
                                     Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(Icons.attach_money,
+                                    color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Tags',
+                                'Tags (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -603,6 +655,8 @@ class _AddProductState extends State<AddProduct> {
 
                                   return null;
                                 },
+                                prefixIcon: Icon(Icons.label,
+                                    color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 100.h,

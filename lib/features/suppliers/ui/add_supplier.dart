@@ -162,6 +162,31 @@ class _AddSupplierState extends State<AddSupplier> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(height: 20.h),
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 38,
+                                  backgroundColor:
+                                      ColorName.primaryColor.withOpacity(0.1),
+                                  child: Icon(Icons.local_shipping,
+                                      size: 48, color: ColorName.primaryColor),
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Center(
+                                child: AppText.medium(
+                                  widget.data == null
+                                      ? 'Add Supplier'
+                                      : 'Edit Supplier',
+                                  color: ColorName.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22.sp,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Divider(
+                                  thickness: 1, color: ColorName.lightGrey),
+                              SizedBox(height: 10.h),
                               AppText.medium(
                                 'Name',
                                 color: Colors.black,
@@ -174,6 +199,8 @@ class _AddSupplierState extends State<AddSupplier> {
                                 formValidationCubit: formValidationCubit,
                                 fieldId: nameKey,
                                 fillColor: ColorName.textfieldColor,
+                                prefixIcon: Icon(Icons.person,
+                                    color: ColorName.primaryColor),
                                 validator:
                                     Functions().noSpecialCharactersValidator,
                               ),
@@ -193,6 +220,8 @@ class _AddSupplierState extends State<AddSupplier> {
                                 fieldId: emailKey,
                                 keyboardType: TextInputType.emailAddress,
                                 fillColor: ColorName.textfieldColor,
+                                prefixIcon: Icon(Icons.email,
+                                    color: ColorName.primaryColor),
                                 validator: (value) => Functions()
                                     .noSpecialCharactersValidator(value,
                                         allowedCharacters: '@.'),
@@ -213,6 +242,8 @@ class _AddSupplierState extends State<AddSupplier> {
                                 fieldId: phoneKey,
                                 keyboardType: TextInputType.phone,
                                 fillColor: ColorName.textfieldColor,
+                                prefixIcon: Icon(Icons.phone,
+                                    color: ColorName.primaryColor),
                                 validator: (value) =>
                                     Functions().combineValidators(value, [
                                   Functions().noSpecialCharactersValidator,
@@ -223,62 +254,60 @@ class _AddSupplierState extends State<AddSupplier> {
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Description',
+                                'Description (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
                                 height: 5.h,
                               ),
-                              TextFormField(
-                                maxLines: 5,
-                                controller: descrController,
-                                keyboardType: TextInputType.multiline,
-                                validator:
-                                    Functions().noSpecialCharactersValidator,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                onTapOutside: (event) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                onChanged: (value) {
-                                  formValidationCubit.validateField(
-                                    descrKey,
-                                    value.isNotEmpty,
-                                  );
-                                },
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "Write a summary and any detail about your Supplier",
-                                  hintStyle: TextStyle(
-                                    color: ColorName.mainGrey,
-                                    fontSize: 14.sp,
-                                    fontFamily: FontFamily.lato,
-                                  ),
-                                  filled: true,
-                                  fillColor: ColorName.textfieldColor,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: ColorName.lightGrey,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: ColorName.lightGrey,
-                                    ),
-                                  ),
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: ColorName.textfieldColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border:
+                                      Border.all(color: ColorName.lightGrey),
                                 ),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorName.blackColor,
-                                  fontSize: 16.sp,
+                                child: TextFormField(
+                                  maxLines: 5,
+                                  controller: descrController,
+                                  keyboardType: TextInputType.multiline,
+                                  validator:
+                                      Functions().noSpecialCharactersValidator,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onTapOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  onChanged: (value) {
+                                    formValidationCubit.validateField(
+                                      descrKey,
+                                      value.isNotEmpty,
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.description,
+                                        color: ColorName.primaryColor),
+                                    hintText:
+                                        "Write a summary and any detail about your Supplier",
+                                    hintStyle: TextStyle(
+                                      color: ColorName.mainGrey,
+                                      fontSize: 14.sp,
+                                      fontFamily: FontFamily.lato,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        10.w, 10.h, 10.w, 0),
+                                  ),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: ColorName.blackColor,
+                                    fontSize: 16.sp,
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height: 100.h,
+                                height: 50.h,
                               )
                             ],
                           ),

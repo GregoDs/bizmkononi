@@ -18,7 +18,6 @@ class _AddBusinessState extends State<AddBusiness> {
   final ImagePickerCubit imagePickerCubit = ImagePickerCubit();
 
   final nameController = TextEditingController();
-  // final typeController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final descrController = TextEditingController();
@@ -39,23 +38,15 @@ class _AddBusinessState extends State<AddBusiness> {
   final locDescr = 'businessLocDescr';
 
   int getYearOfBirthFromString(String ageString) {
-    // Parse the age string to an integer
-    int age = int.tryParse(ageString) ?? 0; // Default to 0 if parsing fails
-
-    // Get the current year
+    int age = int.tryParse(ageString) ?? 0;
     int currentYear = DateTime.now().year;
-
-    // Calculate the year of birth
     int yearOfBirth = currentYear - age;
 
     return yearOfBirth;
   }
 
   String formatString(String input) {
-    // Trim leading and trailing spaces
     String trimmedInput = input.trim();
-
-    // Capitalize the first letter
     String formattedString =
         trimmedInput.substring(0, 1).toUpperCase() + trimmedInput.substring(1);
 
@@ -88,7 +79,6 @@ class _AddBusinessState extends State<AddBusiness> {
     formValidationCubit.resetState();
     if (widget.data != null) {
       nameController.text = widget.data!.name!;
-      // typeController.text = widget.data!.productType!;
       emailController.text = widget.data!.businessEmail!;
       phoneController.text = widget.data!.businessPhone!;
       descrController.text = widget.data!.description!;
@@ -105,12 +95,9 @@ class _AddBusinessState extends State<AddBusiness> {
       }
     }
     formValidationCubit.validateField(nameKey, widget.data != null);
-    // formValidationCubit.validateField(typeKey, widget.data != null);
     formValidationCubit.validateField(emailKey, widget.data != null);
     formValidationCubit.validateField(phoneKey, widget.data != null);
     formValidationCubit.validateField(descrKey, widget.data != null);
-    // formValidationCubit.validateField(latKey, widget.data != null);
-    // formValidationCubit.validateField(longKey, widget.data != null);
     formValidationCubit.validateField(locKey, widget.data != null);
     formValidationCubit.validateField(locDescr, widget.data != null);
   }
@@ -212,21 +199,43 @@ class _AddBusinessState extends State<AddBusiness> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                height: 20.h,
+                              SizedBox(height: 20.h),
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 38,
+                                  backgroundColor:
+                                      ColorName.primaryColor.withOpacity(0.1),
+                                  child: Icon(Icons.business,
+                                      size: 48, color: ColorName.primaryColor),
+                                ),
                               ),
+                              SizedBox(height: 10.h),
+                              Center(
+                                child: AppText.medium(
+                                  widget.data == null
+                                      ? 'Add Your Business'
+                                      : 'Edit Business',
+                                  color: ColorName.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22.sp,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Divider(
+                                  thickness: 1, color: ColorName.lightGrey),
+                              SizedBox(height: 10.h),
                               AppText.medium(
                                 'Business Name',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
+                              SizedBox(height: 5.h),
                               CustomTextField(
                                 controller: nameController,
                                 formValidationCubit: formValidationCubit,
                                 fieldId: nameKey,
                                 fillColor: ColorName.textfieldColor,
+                                prefixIcon: Icon(Icons.store,
+                                    color: ColorName.primaryColor),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter a valid business name';
@@ -235,22 +244,20 @@ class _AddBusinessState extends State<AddBusiness> {
                                   return null;
                                 },
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
+                              SizedBox(height: 20.h),
                               AppText.medium(
                                 'Business Email',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
+                              SizedBox(height: 5.h),
                               CustomTextField(
                                 controller: emailController,
                                 formValidationCubit: formValidationCubit,
                                 fieldId: emailKey,
                                 keyboardType: TextInputType.emailAddress,
                                 fillColor: ColorName.textfieldColor,
+                                prefixIcon: Icon(Icons.email,
+                                    color: ColorName.primaryColor),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter your Business email';
@@ -259,51 +266,41 @@ class _AddBusinessState extends State<AddBusiness> {
                                   return null;
                                 },
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
+                              SizedBox(height: 20.h),
                               AppText.medium(
                                 'Business Phone',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
+                              SizedBox(height: 5.h),
                               CustomTextField(
                                 controller: phoneController,
                                 formValidationCubit: formValidationCubit,
                                 fieldId: phoneKey,
                                 keyboardType: TextInputType.phone,
                                 fillColor: ColorName.textfieldColor,
+                                prefixIcon: Icon(Icons.phone,
+                                    color: ColorName.primaryColor),
                                 validator: (value) =>
                                     Functions().combineValidators(value, [
                                   Functions().noSpecialCharactersValidator,
                                   Functions().phoneNumberValidator,
                                 ]),
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
+                              SizedBox(height: 20.h),
                               AppText.medium(
                                 'Business Location',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
+                              SizedBox(height: 5.h),
                               LocationAutoComplete(
                                 controller: locController,
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
+                              SizedBox(height: 20.h),
                               AppText.medium(
                                 'Location Details',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
+                              SizedBox(height: 5.h),
                               CustomTextField(
                                 controller: locationDetailsController,
                                 formValidationCubit: formValidationCubit,
@@ -317,156 +314,130 @@ class _AddBusinessState extends State<AddBusiness> {
                                   return null;
                                 },
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
+                              SizedBox(height: 20.h),
                               AppText.medium(
                                 'Business Type',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
+                              SizedBox(height: 5.h),
                               Container(
-                                width: ScreenUtil().screenWidth,
-                                height: ScreenUtil().setHeight(50),
-                                padding: const EdgeInsets.only(left: 10),
                                 decoration: BoxDecoration(
                                   color: ColorName.textfieldColor,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border:
-                                      Border.all(color: ColorName.blackColor),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: ColorName.lightGrey),
                                 ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 2),
                                 child: DropdownButtonHideUnderline(
-                                  child: Center(
-                                    child: BlocBuilder<ProductTypeCubit,
-                                        ProductType>(
-                                      bloc: productTypeCubit,
-                                      builder: (context, state) =>
-                                          DropdownButtonFormField<String>(
-                                        decoration:
-                                            const InputDecoration.collapsed(
-                                          hintText: '',
-                                        ),
-                                        value: state == ProductType.SERVICE
-                                            ? 'SERVICE'
-                                            : state == ProductType.PRODUCT
-                                                ? 'PRODUCT'
-                                                : 'Please Select Type',
-                                        hint: AppText.small(
-                                          'Product Type',
-                                          color: ColorName.mainGrey,
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        items: <String>[
-                                          'Please Select Type',
-                                          'SERVICE',
-                                          'PRODUCT',
-                                          'SERVICE_PRODUCT',
-                                        ].map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(
-                                              value,
-                                              style: TextStyle(
-                                                color: value ==
-                                                        'Please Select Type'
-                                                    ? ColorName.mainGrey
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? newValue) {
-                                          if (newValue ==
-                                              'Please Select Type') {
-                                            productTypeCubit.setProductType(
-                                                ProductType.SERVICE);
-                                          } else if (newValue == 'SERVICE') {
-                                            productTypeCubit.setProductType(
-                                                ProductType.PRODUCT);
-                                          } else if (newValue == 'PRODUCT') {
-                                            productTypeCubit.setProductType(
-                                                ProductType.PRODUCT);
-                                          } else if (newValue ==
-                                              'SERVICE_PRODUCT') {
-                                            productTypeCubit.setProductType(
-                                                ProductType.SERVICE_PRODUCT);
-                                          }
-                                        },
+                                  child: BlocBuilder<ProductTypeCubit,
+                                      ProductType>(
+                                    bloc: productTypeCubit,
+                                    builder: (context, state) =>
+                                        DropdownButtonFormField<String>(
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: ''),
+                                      value: state == ProductType.SERVICE
+                                          ? 'SERVICE'
+                                          : state == ProductType.PRODUCT
+                                              ? 'PRODUCT'
+                                              : state ==
+                                                      ProductType.SERVICE_PRODUCT
+                                                  ? 'SERVICE_PRODUCT'
+                                                  : null,
+                                      hint: AppText.small(
+                                        'Please Select Type',
+                                        color: ColorName.mainGrey,
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.normal,
                                       ),
+                                      items: <String>[
+                                        'SERVICE',
+                                        'PRODUCT',
+                                        'SERVICE_PRODUCT',
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        if (newValue == 'SERVICE') {
+                                          productTypeCubit.setProductType(
+                                              ProductType.SERVICE);
+                                        } else if (newValue == 'PRODUCT') {
+                                          productTypeCubit.setProductType(
+                                              ProductType.PRODUCT);
+                                        } else if (newValue ==
+                                            'SERVICE_PRODUCT') {
+                                          productTypeCubit.setProductType(
+                                              ProductType.SERVICE_PRODUCT);
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
+                              SizedBox(height: 20.h),
                               AppText.medium(
-                                'Description',
+                                'Description (Optional)',
                                 color: Colors.black,
                               ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
-                              TextFormField(
-                                maxLines: 5,
-                                controller: descrController,
-                                keyboardType: TextInputType.multiline,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter some text';
-                                  }
-
-                                  return null;
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                onTapOutside: (event) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                onChanged: (value) {
-                                  formValidationCubit.validateField(
-                                      descrKey, value.isNotEmpty);
-                                },
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "Write a summary and any detail about your Product",
-                                  hintStyle: TextStyle(
-                                    color: ColorName.mainGrey,
-                                    fontSize: 14.sp,
-                                    fontFamily: FontFamily.lato,
-                                  ),
-                                  filled: true,
-                                  fillColor: ColorName.textfieldColor,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: ColorName.lightGrey,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: ColorName.lightGrey,
-                                    ),
-                                  ),
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0),
+                              SizedBox(height: 5.h),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: ColorName.textfieldColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: ColorName.lightGrey),
                                 ),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorName.blackColor,
-                                  fontSize: 16.sp,
+                                child: TextFormField(
+                                  maxLines: 5,
+                                  controller: descrController,
+                                  keyboardType: TextInputType.multiline,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    }
+                                    return null;
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  onTapOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  onChanged: (value) {
+                                    formValidationCubit.validateField(
+                                        descrKey, value.isNotEmpty);
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        "Write a summary and any detail about your Product",
+                                    hintStyle: TextStyle(
+                                      color: ColorName.mainGrey,
+                                      fontSize: 14.sp,
+                                      fontFamily: FontFamily.lato,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        10.w, 10.h, 10.w, 0),
+                                  ),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: ColorName.blackColor,
+                                    fontSize: 16.sp,
+                                  ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 50.h,
-                              )
+                              SizedBox(height: 50.h),
                             ],
                           ),
                         ),
@@ -520,55 +491,6 @@ class _AddBusinessState extends State<AddBusiness> {
             );
           },
         ),
-        // floatingActionButton:
-        //     BlocBuilder<FormValidationCubit, Map<String, bool>>(
-        //   bloc: formValidationCubit,
-        //   builder: (context, state) {
-        //     bool isFormValid = formValidationCubit.isFormValid();
-        //     String seletedType = productTypeCubit.state.name;
-        //     return BlocBuilder<ImagePickerCubit, File?>(
-        //       bloc: imagePickerCubit,
-        //       builder: (context, imageState) {
-        //         return Container(
-        //           margin: EdgeInsets.only(bottom: 20.h),
-        //           width: 300.w,
-        //           child: CustomButton(
-        //             onTap: isFormValid &&
-        //                     seletedType != 'Please Select Type' &&
-        //                     imageState != null
-        //                 ? () async {
-        //                         await addCustomer(false);
-        //                       }
-        //                       :
-        //                 isFormValid &&
-        //                     seletedType != 'Please Select Type' && widget.data != null
-        //                     ?  () async {
-        //                         await addCustomer(true);
-        //                       }
-        //                 : () {},
-        //             text: 'Submit',
-        //             color: isFormValid &&
-        //                     seletedType != 'Please Select Type' &&
-        //                     imageState != null || isFormValid &&
-        //                     seletedType != 'Please Select Type' && widget.data != null
-        //                 ? ColorName.primaryColor
-        //                 : ColorName.mainGrey,
-        //             radius: 20,
-        //             fontWeight: FontWeight.normal,
-        //             textColor: isFormValid &&
-        //                     seletedType != 'Please Select Type' &&
-        //                     imageState != null || isFormValid &&
-        //                     seletedType != 'Please Select Type' && widget.data != null
-        //                 ? ColorName.whiteColor
-        //                 : ColorName.lightGrey,
-        //           ),
-        //         );
-        //       },
-        //     );
-        //   },
-        // ),
-        // floatingActionButtonLocation:
-        //     FloatingActionButtonLocation.miniCenterDocked,
       ),
     );
   }

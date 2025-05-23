@@ -20,52 +20,35 @@ class _AddCustomerState extends State<AddCustomer> {
   final DateCubit dateCubit = DateCubit();
 
   final nameController = TextEditingController();
-  // final estimatedAgeController = TextEditingController();
-  // final genderController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final descrController = TextEditingController();
   final dateController = TextEditingController();
 
   final nameKey = 'customerName';
-  // final ageKey = 'customerAge';
   final emailKey = 'customerEmail';
   final phoneKey = 'customerPhone';
   final descrKey = 'customerDescr';
   final dateKey = 'customerDate';
 
   int getYearOfBirthFromString(String ageString) {
-    // Parse the age string to an integer
-    int age = int.tryParse(ageString) ?? 0; // Default to 0 if parsing fails
-
-    // Get the current year
+    int age = int.tryParse(ageString) ?? 0;
     int currentYear = DateTime.now().year;
-
-    // Calculate the year of birth
     int yearOfBirth = currentYear - age;
 
     return yearOfBirth;
   }
 
   DateTime getDateOfBirthFromAge(int age) {
-    // Get the current date
     DateTime now = DateTime.now();
-
-    // Calculate the year of birth by subtracting the age from the current year
     int yearOfBirth = now.year - age;
-
-    // Assuming a person's birthday has already occurred this year,
-    // set the month and day of the birthday to January 1st
     DateTime dateOfBirth = DateTime(yearOfBirth, 1, 1);
 
     return dateOfBirth;
   }
 
   String formatString(String input) {
-    // Trim leading and trailing spaces
     String trimmedInput = input.trim();
-
-    // Capitalize the first letter
     String formattedString =
         trimmedInput.substring(0, 1).toUpperCase() + trimmedInput.substring(1);
 
@@ -82,8 +65,6 @@ class _AddCustomerState extends State<AddCustomer> {
       'gender': selectedGender.toUpperCase(),
       'yearOfBirth': dateController.text,
     };
-    // print(image!.path);
-    //   print(fileName);
     dateCubit.resetDate();
     isEdit
         ? customersCubit.editCustomer(
@@ -106,8 +87,6 @@ class _AddCustomerState extends State<AddCustomer> {
     dateCubit.resetDate();
     formValidationCubit.resetState();
     if (widget.data != null) {
-      // String age = calculateAge(widget.data!.yearOfBirth!);
-      // dateCubit.selectDate(getDateOfBirthFromAge(widget.data!.yearOfBirth!));
       nameController.text = widget.data!.name!;
       dateController.text = widget.data!.yearOfBirth!.toString();
       emailController.text = widget.data!.email!;
@@ -228,9 +207,33 @@ class _AddCustomerState extends State<AddCustomer> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                height: 20.h,
+                              SizedBox(height: 20.h),
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 38,
+                                  backgroundColor:
+                                      ColorName.primaryColor.withOpacity(0.1),
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 48,
+                                    color: ColorName.primaryColor,
+                                  ),
+                                ),
                               ),
+                              SizedBox(height: 10.h),
+                              Center(
+                                child: AppText.medium(
+                                  widget.data == null
+                                      ? 'Add Customer'
+                                      : 'Edit Customer',
+                                  color: ColorName.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22.sp,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Divider(thickness: 1, color: ColorName.lightGrey),
+                              SizedBox(height: 10.h),
                               AppText.medium(
                                 'Name',
                                 color: Colors.black,
@@ -245,12 +248,16 @@ class _AddCustomerState extends State<AddCustomer> {
                                 fillColor: ColorName.textfieldColor,
                                 validator:
                                     Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: ColorName.primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Estimated Age',
+                                'Estimated Age (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -270,11 +277,15 @@ class _AddCustomerState extends State<AddCustomer> {
                                       readOnly: true,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Please enter A date';
+                                          return 'Please enter a date';
                                         }
 
                                         return null;
                                       },
+                                      prefixIcon: Icon(
+                                        Icons.calendar_today,
+                                        color: ColorName.primaryColor,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: const Icon(Icons.calendar_month),
                                         onPressed: () async {
@@ -300,8 +311,6 @@ class _AddCustomerState extends State<AddCustomer> {
                                             dateController.text =
                                                 calculateAge(pickedDate.year)
                                                     .toString();
-                                            // DateFormat('yyyy-MM-dd')
-                                            //     .format(pickedDate);
                                             dateCubit.selectDate(pickedDate);
                                             formValidationCubit.validateField(
                                               dateKey,
@@ -414,6 +423,10 @@ class _AddCustomerState extends State<AddCustomer> {
                                 validator: (value) => Functions()
                                     .noSpecialCharactersValidator(value,
                                         allowedCharacters: '@.'),
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: ColorName.primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -436,12 +449,16 @@ class _AddCustomerState extends State<AddCustomer> {
                                   Functions().noSpecialCharactersValidator,
                                   Functions().phoneNumberValidator,
                                 ]),
+                                prefixIcon: Icon(
+                                  Icons.phone,
+                                  color: ColorName.primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Description',
+                                'Description (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -463,6 +480,10 @@ class _AddCustomerState extends State<AddCustomer> {
                                       descrKey, value.isNotEmpty);
                                 },
                                 decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.description,
+                                    color: ColorName.primaryColor,
+                                  ),
                                   hintText:
                                       "Write a summary and any detail about your Customer",
                                   hintStyle: TextStyle(
@@ -491,54 +512,6 @@ class _AddCustomerState extends State<AddCustomer> {
                                   fontSize: 16.sp,
                                 ),
                               ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              // BlocBuilder<ImagePickerCubit, File?>(
-                              //   bloc: imagePickerCubit,
-                              //   builder: (context, state) {
-                              //     return Container(
-                              //       height: 150,
-                              //       width: ScreenUtil().screenWidth,
-                              //       decoration: BoxDecoration(
-                              //         color: ColorName.textfieldColor,
-                              //         borderRadius: BorderRadius.circular(15),
-                              //       ),
-                              //       child: state != null
-                              //           ? Image.file(
-                              //               imagePickerCubit.state!,
-                              //               fit: BoxFit.cover,
-                              //             )
-                              //           : widget.data != null
-                              //               ? Image.network(
-                              //                   widget.data!.imageUrl!,
-                              //                   fit: BoxFit.cover,
-                              //                 )
-                              //               : Center(
-                              //                   child: AppText.medium(
-                              //                     'Please pick an image',
-                              //                   ),
-                              //                 ),
-                              //     );
-                              //   },
-                              // ),
-                              // SizedBox(
-                              //   height: 10.h,
-                              // ),
-                              // Row(
-                              //   children: [
-                              //     SizedBox(
-                              //       height: 30,
-                              //       width: 200,
-                              //       child: CustomButton(
-                              //         onTap: () => imageDialog(context),
-                              //         text: 'Pick Image',
-                              //         fontWeight: FontWeight.normal,
-                              //         fontSize: 14,
-                              //       ),
-                              //     )
-                              //   ],
-                              // ),
                               SizedBox(
                                 height: 50.h,
                               )
@@ -605,111 +578,8 @@ class _AddCustomerState extends State<AddCustomer> {
                     : ColorName.lightGrey,
               ),
             );
-            // return BlocBuilder<ImagePickerCubit, File?>(
-            //   bloc: imagePickerCubit,
-            //   builder: (context, imageState) {
-            //     return Container(
-            //       color: Colors.transparent,
-            //       margin:
-            //           EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
-            //       width: 300.w,
-            //       height: 50,
-            //       child: CustomButton(
-            //         onTap: isFormValid &&
-            //                 selectedGender.isNotEmpty &&
-            //                 selectedGender != 'Please Select gender' &&
-
-            //                 widget.data == null
-            //             ? () async {
-            //                 await addCustomer(false);
-            //               }
-            //             : isFormValid &&
-            //                     selectedGender.isNotEmpty &&
-            //                     selectedGender != 'Please Select gender' &&
-            //                     widget.data != null
-            //                 ? () async {
-            //                     await addCustomer(true);
-            //                   }
-            //                 : () {},
-            //         text: 'Submit',
-            //         color: isFormValid &&
-            //                     selectedGender.isNotEmpty &&
-            //                     selectedGender != 'Please Select gender' &&
-
-            //                     widget.data == null ||
-            //                 isFormValid &&
-            //                     selectedGender.isNotEmpty &&
-            //                     selectedGender != 'Please Select gender' &&
-            //                     widget.data != null
-            //             ? ColorName.primaryColor
-            //             : ColorName.mainGrey,
-            //         radius: 20,
-            //         fontWeight: FontWeight.normal,
-            //         textColor: isFormValid &&
-            //                     selectedGender.isNotEmpty &&
-            //                     selectedGender != 'Please Select gender' &&
-
-            //                     widget.data == null ||
-            //                 isFormValid &&
-            //                     selectedGender.isNotEmpty &&
-            //                     selectedGender != 'Please Select gender' &&
-            //                     widget.data != null
-            //             ? ColorName.whiteColor
-            //             : ColorName.lightGrey,
-            //       ),
-            //     );
-            //   },
-            // );
           },
         ),
-        // floatingActionButton:
-        //     BlocBuilder<FormValidationCubit, Map<String, bool>>(
-        //   bloc: formValidationCubit,
-        //   builder: (context, state) {
-        //     bool isFormValid = formValidationCubit.isFormValid();
-        //     String selectedGender = genderCubit.state.name;
-        //     return BlocBuilder<ImagePickerCubit, File?>(
-        //       bloc: imagePickerCubit,
-        //       builder: (context, imageState) {
-        //         return Container(
-        //           margin: EdgeInsets.only(bottom: 20.h),
-        //           width: 300.w,
-        //           child: CustomButton(
-        //             onTap: isFormValid &&
-        //                     selectedGender.isNotEmpty &&
-        //                     selectedGender != 'Please Select gender' &&
-        //                     imageState != null
-        //                 ? widget.data == null
-        //                     ? () async {
-        //                         await addCustomer(false);
-        //                       }
-        //                     : () async {
-        //                         await addCustomer(true);
-        //                       }
-        //                 : () {},
-        //             text: 'Submit',
-        //             color: isFormValid &&
-        //                     selectedGender.isNotEmpty &&
-        //                     selectedGender != 'Please Select gender' &&
-        //                     imageState != null
-        //                 ? ColorName.primaryColor
-        //                 : ColorName.mainGrey,
-        //             radius: 20,
-        //             fontWeight: FontWeight.normal,
-        //             textColor: isFormValid &&
-        //                     selectedGender.isNotEmpty &&
-        //                     selectedGender != 'Please Select gender' &&
-        //                     imageState != null
-        //                 ? ColorName.whiteColor
-        //                 : ColorName.lightGrey,
-        //           ),
-        //         );
-        //       },
-        //     );
-        //   },
-        // ),
-        // floatingActionButtonLocation:
-        //     FloatingActionButtonLocation.miniCenterDocked,
       ),
     );
   }

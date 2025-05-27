@@ -59,7 +59,7 @@ class _AddBusinessState extends State<AddBusiness> {
       'productType': productTypeCubit.state.name,
       'businessEmail': emailController.text,
       'businessPhone': phoneController.text,
-      'description': descrController.text,
+      'description': descrController.text.isEmpty ? '' : descrController.text,
       'latitude': 123456,
       'longitude': 536277,
       'locationDetails': locationDetailsController.text,
@@ -97,7 +97,7 @@ class _AddBusinessState extends State<AddBusiness> {
     formValidationCubit.validateField(nameKey, widget.data != null);
     formValidationCubit.validateField(emailKey, widget.data != null);
     formValidationCubit.validateField(phoneKey, widget.data != null);
-    formValidationCubit.validateField(descrKey, widget.data != null);
+    // Don't validate description field here since it's optional
     formValidationCubit.validateField(locKey, widget.data != null);
     formValidationCubit.validateField(locDescr, widget.data != null);
   }
@@ -105,6 +105,8 @@ class _AddBusinessState extends State<AddBusiness> {
   @override
   void initState() {
     setDatafields();
+    // Initialize description field validation as valid since it's optional
+    formValidationCubit.validateField(descrKey, true);
     super.initState();
   }
 
@@ -294,6 +296,8 @@ class _AddBusinessState extends State<AddBusiness> {
                               SizedBox(height: 5.h),
                               LocationAutoComplete(
                                 controller: locController,
+                                formValidationCubit: formValidationCubit,
+                                fieldId: locKey,
                               ),
                               SizedBox(height: 20.h),
                               AppText.medium(
@@ -389,55 +393,62 @@ class _AddBusinessState extends State<AddBusiness> {
                               SizedBox(height: 20.h),
                               AppText.medium(
                                 'Description (Optional)',
+                                'Description (Optional)',
                                 color: Colors.black,
                               ),
-                              SizedBox(height: 5.h),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: ColorName.textfieldColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: ColorName.lightGrey),
-                                ),
-                                child: TextFormField(
-                                  maxLines: 5,
-                                  controller: descrController,
-                                  keyboardType: TextInputType.multiline,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter some text';
-                                    }
-                                    return null;
-                                  },
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  onTapOutside: (event) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  onChanged: (value) {
-                                    formValidationCubit.validateField(
-                                        descrKey, value.isNotEmpty);
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        "Write a summary and any detail about your Product",
-                                    hintStyle: TextStyle(
-                                      color: ColorName.mainGrey,
-                                      fontSize: 14.sp,
-                                      fontFamily: FontFamily.lato,
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              TextFormField(
+                                maxLines: 5,
+                                controller: descrController,
+                                keyboardType: TextInputType.multiline,
+                                validator: (value) {
+                                  // Description is optional, so always return null
+                                  return null;
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                onTapOutside: (event) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                },
+                                onChanged: (value) {
+                                  // No need to validate on change since it's optional
+                                },
+                                decoration: InputDecoration(
+                                  hintText:
+                                      "Write a summary and any detail about your Product (Optional)",
+                                  hintStyle: TextStyle(
+                                    color: ColorName.mainGrey,
+                                    fontSize: 14.sp,
+                                    fontFamily: FontFamily.lato,
+                                  ),
+                                  filled: true,
+                                  fillColor: ColorName.textfieldColor,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      color: ColorName.lightGrey,
                                     ),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.fromLTRB(
-                                        10.w, 10.h, 10.w, 0),
                                   ),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    color: ColorName.blackColor,
-                                    fontSize: 16.sp,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      color: ColorName.lightGrey,
+                                    ),
                                   ),
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0),
+                                ),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: ColorName.blackColor,
+                                  fontSize: 16.sp,
                                 ),
                               ),
-                              SizedBox(height: 50.h),
+                              SizedBox(
+                                height: 50.h,
+                              )
                             ],
                           ),
                         ),
@@ -494,6 +505,7 @@ class _AddBusinessState extends State<AddBusiness> {
       ),
     );
   }
+
 
   void imageDialog(BuildContext context) {
     showDialog(

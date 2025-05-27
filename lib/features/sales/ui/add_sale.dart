@@ -192,11 +192,9 @@ class _AddSaleState extends State<AddSale> {
                       builder: (context, state) {
                         return SingleChildScrollView(
                           child: Padding(
-                            padding: EdgeInsets.only(
-                              top: 15.h,
-                              left: 15.w,
-                              right: 15.w,
-                              bottom: 80.h,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15.w,
+                              vertical: 15.h,
                             ),
                             child: Container(
                               decoration: BoxDecoration(
@@ -219,157 +217,138 @@ class _AddSaleState extends State<AddSale> {
                                       height: 5.h,
                                     ),
                                     widget.data != null
-                                        ? CustomTextField(
+                                        ? ServicesTextField(
                                             controller: customerController,
                                             formValidationCubit:
                                                 formValidationCubit,
                                             readOnly: true,
                                             fieldId: amountPaidKey,
-                                            fillColor: ColorName.textfieldColor,
-                                            // validator: (value) {
-                                            //   if (value == null ||
-                                            //       value.isEmpty) {
-                                            //     return 'Please enter some text';
-                                            //   }
-
-                                            //   return null;
-                                            // },
+                                            fillColor: ColorName.lightGrey,
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Please select a customer';
+                                              }
+                                              return null;
+                                            },
+                                            prefixIcon: const Icon(Icons.person,
+                                                color: ColorName.blue200),
+                                            borderRadius: 12,
+                                            isPassword: false,
+                                            label: null,
+                                            suffixIcon: const Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 8.0),
+                                              child: Text('',
+                                                  style: TextStyle(
+                                                      color: ColorName
+                                                          .whiteColor)),
+                                            ),
                                           )
-                                        : Container(
-                                            width: ScreenUtil().screenWidth,
-                                            height: ScreenUtil().setHeight(50),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: ColorName.textfieldColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              border: Border.all(
-                                                color: ColorName.blackColor,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        left: 8.0,
-                                                      ),
-                                                      child: BlocBuilder<
-                                                          CustomersCubit,
-                                                          CustomersState>(
-                                                        bloc: customersCubit,
-                                                        builder:
-                                                            (context, state) {
-                                                          if (state
-                                                              is CustomersLoaded) {
-                                                            return BlocBuilder<
-                                                                SelectedCustomerCubit,
-                                                                CustomersModelRow?>(
-                                                              bloc:
-                                                                  selectedCustomerCubit,
-                                                              builder: (context,
-                                                                  selectedState) {
-                                                                final selectedCustomer =
-                                                                    selectedCustomerCubit
-                                                                        .state;
-                                                                final selectedCustomerName =
-                                                                    selectedCustomer
-                                                                            ?.name ??
-                                                                        'Select Customer';
-                                                                return DropdownButtonHideUnderline(
-                                                                  child: DropdownButton<
-                                                                      CustomersModelRow>(
-                                                                    value:
-                                                                        selectedCustomer,
-                                                                    items: state
-                                                                        .data
-                                                                        .map<
-                                                                            DropdownMenuItem<CustomersModelRow>>(
-                                                                      (CustomersModelRow
-                                                                          category) {
-                                                                        return DropdownMenuItem<
-                                                                            CustomersModelRow>(
-                                                                          value:
-                                                                              category,
-                                                                          child:
-                                                                              Text(
-                                                                            category.name ??
-                                                                                '',
-                                                                            style:
-                                                                                const TextStyle(
-                                                                              color: ColorName.blackColor,
-                                                                              fontWeight: FontWeight.normal,
-                                                                            ),
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    ).toList(),
-                                                                    onChanged:
-                                                                        (CustomersModelRow?
-                                                                            newValue) {
-                                                                      selectedCustomerCubit
-                                                                          .setSelectedCategory(
-                                                                              newValue);
-                                                                    },
-                                                                    icon: const Icon(
-                                                                        Icons
-                                                                            .arrow_drop_down,
-                                                                        color: ColorName
-                                                                            .blackColor),
-                                                                    iconSize:
-                                                                        24,
-                                                                    isExpanded:
-                                                                        true,
-                                                                    underline:
-                                                                        const SizedBox(),
-                                                                    hint: Text(
-                                                                      selectedCustomerName,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: ColorName
-                                                                            .mainGrey,
-                                                                        fontSize:
-                                                                            14.sp,
-                                                                        fontWeight:
-                                                                            FontWeight.normal,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            );
-                                                          } else {
-                                                            return SpinKitWave(
-                                                              size: 20,
-                                                              itemBuilder:
-                                                                  (BuildContext
-                                                                          context,
-                                                                      int index) {
-                                                                return const DecoratedBox(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: ColorName
-                                                                        .primaryColor,
-                                                                  ),
-                                                                );
-                                                              },
-                                                            );
-                                                          }
+                                        : BlocBuilder<CustomersCubit,
+                                            CustomersState>(
+                                            bloc: customersCubit,
+                                            builder: (context, state) {
+                                              if (state is CustomersLoaded) {
+                                                return Container(
+                                                  width:
+                                                      ScreenUtil().screenWidth,
+                                                  height: ScreenUtil()
+                                                      .setHeight(50),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 10,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: ColorName
+                                                        .textfieldColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    border: Border.all(
+                                                      color:
+                                                          ColorName.blackColor,
+                                                    ),
+                                                  ),
+                                                  child:
+                                                      DropdownButtonHideUnderline(
+                                                    child: DropdownButton<
+                                                        CustomersModelRow>(
+                                                      value:
+                                                          selectedCustomerCubit
+                                                              .state,
+                                                      items: state.data.map<
+                                                          DropdownMenuItem<
+                                                              CustomersModelRow>>(
+                                                        (CustomersModelRow
+                                                            customer) {
+                                                          return DropdownMenuItem<
+                                                              CustomersModelRow>(
+                                                            value: customer,
+                                                            child: Text(
+                                                              customer.name ??
+                                                                  '',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: ColorName
+                                                                    .blackColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                              ),
+                                                            ),
+                                                          );
                                                         },
+                                                      ).toList(),
+                                                      onChanged:
+                                                          (CustomersModelRow?
+                                                              newValue) {
+                                                        selectedCustomerCubit
+                                                            .setSelectedCategory(
+                                                                newValue);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.arrow_drop_down,
+                                                          color: ColorName
+                                                              .blackColor),
+                                                      iconSize: 24,
+                                                      isExpanded: true,
+                                                      underline:
+                                                          const SizedBox(),
+                                                      hint: Text(
+                                                        selectedCustomerCubit
+                                                                .state?.name ??
+                                                            'Select Customer',
+                                                        style: TextStyle(
+                                                          color: ColorName
+                                                              .mainGrey,
+                                                          fontSize: 14.sp,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
+                                                );
+                                              } else {
+                                                return Center(
+                                                  child: SpinKitWave(
+                                                    size: 20,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return const DecoratedBox(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: ColorName
+                                                              .primaryColor,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              }
+                                            },
                                           ),
                                     SizedBox(
                                       height: 20.h,
@@ -381,84 +360,91 @@ class _AddSaleState extends State<AddSale> {
                                     SizedBox(
                                       height: 5.h,
                                     ),
-                                    Container(
-                                      height: 200,
-                                      width: ScreenUtil().screenWidth,
-                                      padding: EdgeInsets.all(8.h),
-                                      decoration: BoxDecoration(
-                                        color: ColorName.textfieldColor,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: BlocBuilder<SelectedSaleCubit,
-                                          List<SaleProduct>>(
-                                        bloc: selectedSaleCubit,
-                                        builder: (context, selectedSaleState) {
-                                          if (selectedSaleState.isEmpty) {
-                                            return Center(
-                                              child: AppText.medium(
-                                                'Please add an item',
-                                              ),
-                                            );
-                                          }
-                                          return ListView.builder(
-                                            itemCount: selectedSaleState.length,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index) {
-                                              var item =
-                                                  selectedSaleState[index];
-                                              return Container(
-                                                padding: EdgeInsets.all(8.h),
-                                                margin: EdgeInsets.symmetric(
-                                                  vertical: 3.h,
+                                    BlocBuilder<SelectedSaleCubit,
+                                        List<SaleProduct>>(
+                                      bloc: selectedSaleCubit,
+                                      builder: (context, selectedSaleState) {
+                                        return Container(
+                                          height: 200,
+                                          width: ScreenUtil().screenWidth,
+                                          padding: EdgeInsets.all(8.h),
+                                          decoration: BoxDecoration(
+                                              color: ColorName.textfieldColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              border: Border.all(
+                                                  color: ColorName.blackColor)),
+                                          child: selectedSaleState.isEmpty
+                                              ? Center(
+                                                  child: AppText.medium(
+                                                    'Please add an item',
+                                                  ),
+                                                )
+                                              : ListView.builder(
+                                                  itemCount:
+                                                      selectedSaleState.length,
+                                                  shrinkWrap: true,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    var item =
+                                                        selectedSaleState[
+                                                            index];
+                                                    return Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.h,
+                                                              vertical: 10.h),
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 3.h),
+                                                      decoration: BoxDecoration(
+                                                          color: ColorName
+                                                              .whiteColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      12)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              AppText.medium(
+                                                                item.productName,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 5.h),
+                                                              AppText.small(
+                                                                  'Quantity: ${item.quantity}'),
+                                                              AppText.small(
+                                                                  'Price: Ksh ${item.salePrice}'),
+                                                            ],
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () =>
+                                                                selectedSaleCubit
+                                                                    .removeProduct(
+                                                                        item),
+                                                            child: const Icon(
+                                                              Icons.close,
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
-                                                decoration: BoxDecoration(
-                                                    color: ColorName.whiteColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        AppText.medium(
-                                                          item.productName,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 15,
-                                                        ),
-                                                        AppText.medium(
-                                                          item.quantity,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 15,
-                                                        ),
-                                                        AppText.medium(
-                                                          'Ksh: ${item.salePrice}',
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    GestureDetector(
-                                                        onTap: () =>
-                                                            selectedSaleCubit
-                                                                .removeProduct(
-                                                                    item),
-                                                        child: const Icon(
-                                                          Icons.close,
-                                                          color: Colors.red,
-                                                        ))
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
+                                        );
+                                      },
                                     ),
                                     SizedBox(
                                       height: 10.h,
@@ -507,27 +493,43 @@ class _AddSaleState extends State<AddSale> {
                                             selectedSaleCubit
                                                 .getTotalPrice()
                                                 .toString();
-                                        amountChargedController.text != '0.0'
-                                            ? formValidationCubit.validateField(
-                                                amountChargedKey,
-                                                true,
-                                              )
-                                            : null;
-                                        return CustomTextField(
+                                        if (amountChargedController.text !=
+                                            '0.0') {
+                                          formValidationCubit.validateField(
+                                              amountChargedKey, true);
+                                        } else {
+                                          formValidationCubit.validateField(
+                                              amountChargedKey, false);
+                                        }
+                                        return ServicesTextField(
                                           readOnly: false,
                                           controller: amountChargedController,
                                           formValidationCubit:
                                               formValidationCubit,
                                           fieldId: amountChargedKey,
-                                          fillColor: ColorName.textfieldColor,
+                                          fillColor: ColorName.lightGrey,
+                                          keyboardType: TextInputType.number,
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'Please enter some text';
+                                              return 'Please enter amount charged';
                                             }
-
                                             return null;
                                           },
+                                          prefixIcon: const Icon(
+                                              Icons.attach_money,
+                                              color: ColorName.blue200),
+                                          borderRadius: 12,
+                                          isPassword: false,
+                                          label: null,
+                                          suffixIcon: const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 8.0),
+                                            child: Text('',
+                                                style: TextStyle(
+                                                    color:
+                                                        ColorName.whiteColor)),
+                                          ),
                                         );
                                       },
                                     ),
@@ -541,18 +543,30 @@ class _AddSaleState extends State<AddSale> {
                                     SizedBox(
                                       height: 5.h,
                                     ),
-                                    CustomTextField(
+                                    ServicesTextField(
                                       controller: amountPaidController,
+                                      readOnly: false,
                                       formValidationCubit: formValidationCubit,
                                       fieldId: amountPaidKey,
-                                      fillColor: ColorName.textfieldColor,
+                                      fillColor: ColorName.lightGrey,
+                                      keyboardType: TextInputType.number,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Please enter some text';
+                                          return 'Please enter amount paid';
                                         }
-
                                         return null;
                                       },
+                                      prefixIcon: const Icon(Icons.money_off,
+                                          color: ColorName.blue200),
+                                      borderRadius: 12,
+                                      isPassword: false,
+                                      label: null,
+                                      suffixIcon: const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Text('',
+                                            style: TextStyle(
+                                                color: ColorName.whiteColor)),
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 100.h,
@@ -640,6 +654,96 @@ class _AddSaleState extends State<AddSale> {
         // ),
         // floatingActionButtonLocation:
         //     FloatingActionButtonLocation.miniCenterDocked,
+      ),
+    );
+  }
+
+  Widget _buildCustomerSelectionField(List<CustomersModelRow> customers) {
+    return Container(
+      width: ScreenUtil().screenWidth,
+      height: ScreenUtil().setHeight(50),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: ColorName.textfieldColor,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: ColorName.blackColor),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: BlocBuilder<CustomersCubit, CustomersState>(
+                  bloc: customersCubit,
+                  builder: (context, state) {
+                    if (state is CustomersLoaded) {
+                      return BlocBuilder<SelectedCustomerCubit,
+                          CustomersModelRow?>(
+                        bloc: selectedCustomerCubit,
+                        builder: (context, selectedState) {
+                          final selectedCustomer = selectedCustomerCubit.state;
+                          final selectedCustomerName =
+                              selectedCustomer?.name ?? 'Select Customer';
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton<CustomersModelRow>(
+                              value: selectedCustomer,
+                              items: state.data
+                                  .map<DropdownMenuItem<CustomersModelRow>>(
+                                (CustomersModelRow category) {
+                                  return DropdownMenuItem<CustomersModelRow>(
+                                    value: category,
+                                    child: Text(
+                                      category.name ?? '',
+                                      style: const TextStyle(
+                                        color: ColorName.blackColor,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                },
+                              ).toList(),
+                              onChanged: (CustomersModelRow? newValue) {
+                                selectedCustomerCubit
+                                    .setSelectedCategory(newValue);
+                              },
+                              icon: const Icon(Icons.arrow_drop_down,
+                                  color: ColorName.blackColor),
+                              iconSize: 24,
+                              isExpanded: true,
+                              underline: const SizedBox(),
+                              hint: Text(
+                                selectedCustomerName,
+                                style: TextStyle(
+                                  color: ColorName.mainGrey,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return SpinKitWave(
+                        size: 20,
+                        itemBuilder: (BuildContext context, int index) {
+                          return const DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: ColorName.primaryColor,
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

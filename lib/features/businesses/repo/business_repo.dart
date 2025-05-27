@@ -10,6 +10,8 @@ class BusinessesRepo {
     BusinessModel? businessModel;
 
     var res = await _apiService.get('/businesses', false);
+    print('getBusinesses response status code: ${res.statusCode}');
+    print('getBusinesses response data: ${res.data}');
     if (res.statusCode == 200) {
       businessModel = BusinessModel.fromJson(jsonDecode(jsonEncode(res.data)));
     }
@@ -21,6 +23,8 @@ class BusinessesRepo {
     BusinessModelRows? businessModel;
 
     var res = await _apiService.get('/businesses/$id', false);
+    print('getSingleBusiness response status code: ${res.statusCode}');
+    print('getSingleBusiness response data: ${res.data}');
     if (res.statusCode == 200) {
       businessModel =
           BusinessModelRows.fromJson(jsonDecode(jsonEncode(res.data)));
@@ -40,6 +44,8 @@ class BusinessesRepo {
       formdata,
       false,
     );
+    print('addBusiness response status code: ${res.statusCode}');
+    print('addBusiness response data: ${res.data}');
     if (res.statusCode == 200 || res.statusCode == 201) {
       return ResponseModel(
         isSuccess: true,
@@ -51,12 +57,13 @@ class BusinessesRepo {
   }
 
   Future<ResponseModel> editBusiness(
-      String id, var data,) async {
-       
-
+    String id,
+    var data,
+  ) async {
     var formdata = dio.FormData.fromMap(data);
-    var res = await _apiService.put(
-        '/businesses/$id', formdata);
+    var res = await _apiService.put('/businesses/$id', formdata);
+    print('editBusiness response status code: ${res.statusCode}');
+    print('editBusiness response data: ${res.data}');
     if (res.statusCode == 200 || res.statusCode == 201) {
       return ResponseModel(
           isSuccess: true, response: 'Business Updated Successfully');
@@ -66,8 +73,9 @@ class BusinessesRepo {
   }
 
   Future<ResponseModel> deleteBusiness(var id) async {
-    var res = await _apiService
-        .delete('/businesses/$id');
+    var res = await _apiService.delete('/businesses/$id');
+    print('deleteBusiness response status code: ${res.statusCode}');
+    print('deleteBusiness response data: ${res.data}');
     if (res.statusCode == 200 || res.statusCode == 201) {
       return ResponseModel(
           isSuccess: true, response: 'Business Deleted Successfully');

@@ -538,6 +538,7 @@ class _AddProductState extends State<AddProduct> {
                               ),
                               AppText.medium(
                                 'Description (Optional)',
+                                'Description (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -595,7 +596,7 @@ class _AddProductState extends State<AddProduct> {
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Buying Price e.g 1000(Optional)',
+                                'Buying Price e.g 1000 (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -637,6 +638,7 @@ class _AddProductState extends State<AddProduct> {
                                 height: 20.h,
                               ),
                               AppText.medium(
+                                'Tags (Optional)',
                                 'Tags (Optional)',
                                 color: Colors.black,
                               ),

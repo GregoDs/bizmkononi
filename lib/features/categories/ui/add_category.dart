@@ -44,7 +44,7 @@ class _AddCategoryState extends State<AddCategory> {
   addCategory(bool isEdit) async {
     Map<String, dynamic> data = {
       'name': formatString(nameController.text),
-      'description': descrController.text,
+      'description': descrController.text.isEmpty ? '' : descrController.text,
     };
     isEdit
         ? categoryCubit.editCategory(
@@ -60,10 +60,10 @@ class _AddCategoryState extends State<AddCategory> {
     formValidationCubit.resetState();
     if (widget.data != null) {
       nameController.text = widget.data!.name!;
-      descrController.text = widget.data!.description!;
+      descrController.text = widget.data!.description ?? '';
     }
     formValidationCubit.validateField(nameKey, widget.data != null);
-    formValidationCubit.validateField(descrKey, widget.data != null);
+    formValidationCubit.validateField(descrKey, true);
   }
 
   @override
@@ -219,8 +219,9 @@ class _AddCategoryState extends State<AddCategory> {
                                   maxLines: 5,
                                   controller: descrController,
                                   keyboardType: TextInputType.multiline,
-                                  validator:
-                                      Functions().noSpecialCharactersValidator,
+                                  validator: (value) {
+                                    return null;
+                                  },
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   onTapOutside: (event) {
@@ -228,8 +229,6 @@ class _AddCategoryState extends State<AddCategory> {
                                         ?.unfocus();
                                   },
                                   onChanged: (value) {
-                                    formValidationCubit.validateField(
-                                        descrKey, value.isNotEmpty);
                                   },
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(

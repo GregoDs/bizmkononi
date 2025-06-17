@@ -160,15 +160,17 @@ class Supplier {
 
 class SupplyProduct {
   String productId;
-  String supplyPrice;
+  String supplyPrice; // unit price
   String quantity;
   String productName;
+  String totalAmount; // add this
 
   SupplyProduct({
     this.productId = '',
     this.supplyPrice = '',
     this.quantity = '',
     this.productName = '',
+    this.totalAmount = '',
   });
 
   Map toJson() => {
@@ -176,6 +178,7 @@ class SupplyProduct {
         'supplyPrice': supplyPrice,
         'quantity': quantity,
         'productName': productName,
+        'totalAmount': totalAmount,
       };
 }
 

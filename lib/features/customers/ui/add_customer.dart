@@ -61,7 +61,7 @@ class _AddCustomerState extends State<AddCustomer> {
       'name': formatString(nameController.text),
       'email': emailController.text,
       'phone': phoneController.text,
-      'description': descrController.text,
+      'description': descrController.text.isEmpty ? '' : descrController.text,
       'gender': selectedGender.toUpperCase(),
       'yearOfBirth': dateController.text,
     };
@@ -91,7 +91,7 @@ class _AddCustomerState extends State<AddCustomer> {
       dateController.text = widget.data!.yearOfBirth!.toString();
       emailController.text = widget.data!.email!;
       phoneController.text = widget.data!.phone!;
-      descrController.text = widget.data!.description!;
+      descrController.text = widget.data!.description ?? '';
       if (widget.data!.gender == 'MALE') {
         genderCubit.setGender(Gender.Male);
       } else if (widget.data!.gender == 'FEMALE') {
@@ -102,7 +102,7 @@ class _AddCustomerState extends State<AddCustomer> {
     formValidationCubit.validateField(dateKey, widget.data != null);
     formValidationCubit.validateField(emailKey, widget.data != null);
     formValidationCubit.validateField(phoneKey, widget.data != null);
-    formValidationCubit.validateField(descrKey, widget.data != null);
+    formValidationCubit.validateField(descrKey, true);
   }
 
   @override
@@ -468,16 +468,15 @@ class _AddCustomerState extends State<AddCustomer> {
                                 maxLines: 5,
                                 controller: descrController,
                                 keyboardType: TextInputType.multiline,
-                                validator:
-                                    Functions().noSpecialCharactersValidator,
+                                validator: (value) {
+                                  return null;
+                                },
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 onTapOutside: (event) {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                 },
                                 onChanged: (value) {
-                                  formValidationCubit.validateField(
-                                      descrKey, value.isNotEmpty);
                                 },
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(

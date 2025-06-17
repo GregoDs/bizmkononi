@@ -158,33 +158,13 @@ class _AddSaleState extends State<AddSale> {
             },
             builder: (context, state) {
               if (state is SalesLoading) {
-                return Center(
-                  child: SpinKitWave(
-                    itemBuilder: (BuildContext context, int index) {
-                      return const DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: ColorName.primaryColor,
-                        ),
-                      );
-                    },
-                  ),
-                );
+                return Center(child: CircularProgressIndicator());
               }
               return BlocBuilder<ProductsCubit, ProductsState>(
                 bloc: productsCubit,
                 builder: (context, productsState) {
                   if (productsState is ProductsLoading) {
-                    return Center(
-                      child: SpinKitWave(
-                        itemBuilder: (BuildContext context, int index) {
-                          return const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: ColorName.primaryColor,
-                            ),
-                          );
-                        },
-                      ),
-                    );
+                    return Center(child: CircularProgressIndicator());
                   } else if (productsState is ProductsLoaded) {
                     var products = productsState.data;
                     return BlocBuilder<FormValidationCubit, Map<String, bool>>(
@@ -192,388 +172,263 @@ class _AddSaleState extends State<AddSale> {
                       builder: (context, state) {
                         return SingleChildScrollView(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 15.w,
-                              vertical: 15.h,
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: ColorName.whiteColor,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 20,
+                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Select Customer
+                                AppText.medium(
+                                  widget.data != null ? 'Customer' : 'Select Customer',
+                                  color: Colors.black,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AppText.medium(
-                                      'Select Customer',
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
-                                    widget.data != null
-                                        ? ServicesTextField(
-                                            controller: customerController,
-                                            formValidationCubit:
-                                                formValidationCubit,
-                                            readOnly: true,
-                                            fieldId: amountPaidKey,
-                                            fillColor: ColorName.lightGrey,
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return 'Please select a customer';
-                                              }
-                                              return null;
-                                            },
-                                            prefixIcon: const Icon(Icons.person,
-                                                color: ColorName.blue200),
-                                            borderRadius: 12,
-                                            isPassword: false,
-                                            label: null,
-                                            suffixIcon: const Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 8.0),
-                                              child: Text('',
-                                                  style: TextStyle(
-                                                      color: ColorName
-                                                          .whiteColor)),
-                                            ),
-                                          )
-                                        : BlocBuilder<CustomersCubit,
-                                            CustomersState>(
-                                            bloc: customersCubit,
-                                            builder: (context, state) {
-                                              if (state is CustomersLoaded) {
-                                                return Container(
-                                                  width:
-                                                      ScreenUtil().screenWidth,
-                                                  height: ScreenUtil()
-                                                      .setHeight(50),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 10,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: ColorName
-                                                        .textfieldColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    border: Border.all(
-                                                      color:
-                                                          ColorName.blackColor,
-                                                    ),
-                                                  ),
-                                                  child:
-                                                      DropdownButtonHideUnderline(
-                                                    child: DropdownButton<
-                                                        CustomersModelRow>(
-                                                      value:
-                                                          selectedCustomerCubit
-                                                              .state,
-                                                      items: state.data.map<
-                                                          DropdownMenuItem<
-                                                              CustomersModelRow>>(
-                                                        (CustomersModelRow
-                                                            customer) {
-                                                          return DropdownMenuItem<
-                                                              CustomersModelRow>(
-                                                            value: customer,
-                                                            child: Text(
-                                                              customer.name ??
-                                                                  '',
-                                                              style:
-                                                                  const TextStyle(
-                                                                color: ColorName
-                                                                    .blackColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ).toList(),
-                                                      onChanged:
-                                                          (CustomersModelRow?
-                                                              newValue) {
-                                                        selectedCustomerCubit
-                                                            .setSelectedCategory(
-                                                                newValue);
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.arrow_drop_down,
-                                                          color: ColorName
-                                                              .blackColor),
-                                                      iconSize: 24,
-                                                      isExpanded: true,
-                                                      underline:
-                                                          const SizedBox(),
-                                                      hint: Text(
-                                                        selectedCustomerCubit
-                                                                .state?.name ??
-                                                            'Select Customer',
-                                                        style: TextStyle(
-                                                          color: ColorName
-                                                              .mainGrey,
-                                                          fontSize: 14.sp,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              } else {
-                                                return Center(
-                                                  child: SpinKitWave(
-                                                    size: 20,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      return const DecoratedBox(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: ColorName
-                                                              .primaryColor,
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                );
-                                              }
-                                            },
+                                SizedBox(height: 5.h),
+                                widget.data != null
+                                    ? ServicesTextField(
+                                        controller: TextEditingController(text: widget.data!.customer!.name!),
+                                        formValidationCubit: formValidationCubit,
+                                        readOnly: true,
+                                        fieldId: '',
+                                        fillColor: ColorName.lightGrey,
+                                        prefixIcon: const Icon(Icons.person, color: ColorName.blue200),
+                                        borderRadius: 12,
+                                        isPassword: false,
+                                        label: null,
+                                        suffixIcon: const Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Text('', style: TextStyle(color: ColorName.whiteColor)),
+                                        ),
+                                      )
+                                    : _buildCustomerSelectionField(context),
+                                SizedBox(height: 20.h),
+
+                                // Selected Products
+                                AppText.medium('Selected Products', color: Colors.black),
+                                SizedBox(height: 5.h),
+                                Container(
+                                  height: 220,
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF6F8FB),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: BlocBuilder<SelectedSaleCubit, List<SaleProduct>>(
+                                    bloc: selectedSaleCubit,
+                                    builder: (context, selectedSaleState) {
+                                      if (selectedSaleState.isEmpty) {
+                                        return Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/emptyData.png',
+                                                width: 140,
+                                                height: 140,
+                                                fit: BoxFit.contain,
+                                              ),
+                                              const SizedBox(height: 16),
+                                              AppText.medium(
+                                                'Please add an item',
+                                                color: const Color(0xFF2B4B6A),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ],
                                           ),
-                                    SizedBox(
-                                      height: 20.h,
-                                    ),
-                                    AppText.medium(
-                                      'Selected Products',
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
-                                    BlocBuilder<SelectedSaleCubit,
-                                        List<SaleProduct>>(
-                                      bloc: selectedSaleCubit,
-                                      builder: (context, selectedSaleState) {
-                                        return Container(
-                                          height: 200,
-                                          width: ScreenUtil().screenWidth,
-                                          padding: EdgeInsets.all(8.h),
-                                          decoration: BoxDecoration(
-                                              color: ColorName.textfieldColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              border: Border.all(
-                                                  color: ColorName.blackColor)),
-                                          child: selectedSaleState.isEmpty
-                                              ? Center(
-                                                  child: AppText.medium(
-                                                    'Please add an item',
-                                                  ),
-                                                )
-                                              : ListView.builder(
-                                                  itemCount:
-                                                      selectedSaleState.length,
-                                                  shrinkWrap: true,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    var item =
-                                                        selectedSaleState[
-                                                            index];
-                                                    return Container(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 8.h,
-                                                              vertical: 10.h),
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 3.h),
-                                                      decoration: BoxDecoration(
-                                                          color: ColorName
-                                                              .whiteColor,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              AppText.medium(
-                                                                item.productName,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 5.h),
-                                                              AppText.small(
-                                                                  'Quantity: ${item.quantity}'),
-                                                              AppText.small(
-                                                                  'Price: Ksh ${item.salePrice}'),
-                                                            ],
-                                                          ),
-                                                          GestureDetector(
-                                                            onTap: () =>
-                                                                selectedSaleCubit
-                                                                    .removeProduct(
-                                                                        item),
-                                                            child: const Icon(
-                                                              Icons.close,
-                                                              color: Colors.red,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
                                         );
-                                      },
-                                    ),
+                                      }
+                                      return ListView.builder(
+                                        itemCount: selectedSaleState.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          var item = selectedSaleState[index];
+                                          return Container(
+                                            padding: EdgeInsets.all(12),
+                                            margin: EdgeInsets.symmetric(vertical: 6),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(16),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.07),
+                                                  blurRadius: 4,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    AppText.medium(item.productName),
+                                                    const SizedBox(width: 15),
+                                                    AppText.medium(item.quantity),
+                                                    const SizedBox(width: 20),
+                                                    AppText.medium('Ksh: ${item.salePrice}'),
+                                                  ],
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () => selectedSaleCubit.removeProduct(item),
+                                                  child: const Icon(Icons.close, color: Colors.red),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
                                     SizedBox(
-                                      height: 10.h,
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 30,
-                                          width: 200,
-                                          child: CustomButton(
-                                            onTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CenterPopup(
-                                                    data: products,
-                                                    selectedSaleCubit:
-                                                        selectedSaleCubit,
-                                                  );
-                                                },
+                                      height: 40,
+                                      width: 180,
+                                      child: CustomButton(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return CenterPopup(
+                                                data: products,
+                                                selectedSaleCubit: selectedSaleCubit,
                                               );
                                             },
-                                            text: 'Add Product',
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20.h,
-                                    ),
-                                    AppText.medium(
-                                      'Amount Charged',
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
-                                    BlocBuilder<SelectedSaleCubit,
-                                        List<SaleProduct>>(
-                                      bloc: selectedSaleCubit,
-                                      builder: (context, state) {
-                                        amountChargedController.text =
-                                            selectedSaleCubit
-                                                .getTotalPrice()
-                                                .toString();
-                                        if (amountChargedController.text !=
-                                            '0.0') {
-                                          formValidationCubit.validateField(
-                                              amountChargedKey, true);
-                                        } else {
-                                          formValidationCubit.validateField(
-                                              amountChargedKey, false);
-                                        }
-                                        return ServicesTextField(
-                                          readOnly: false,
-                                          controller: amountChargedController,
-                                          formValidationCubit:
-                                              formValidationCubit,
-                                          fieldId: amountChargedKey,
-                                          fillColor: ColorName.lightGrey,
-                                          keyboardType: TextInputType.number,
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Please enter amount charged';
-                                            }
-                                            return null;
-                                          },
-                                          prefixIcon: const Icon(
-                                              Icons.attach_money,
-                                              color: ColorName.blue200),
-                                          borderRadius: 12,
-                                          isPassword: false,
-                                          label: null,
-                                          suffixIcon: const Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 8.0),
-                                            child: Text('',
-                                                style: TextStyle(
-                                                    color:
-                                                        ColorName.whiteColor)),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 20.h,
-                                    ),
-                                    AppText.medium(
-                                      'Amount Paid',
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
-                                    ServicesTextField(
-                                      controller: amountPaidController,
-                                      readOnly: false,
-                                      formValidationCubit: formValidationCubit,
-                                      fieldId: amountPaidKey,
-                                      fillColor: ColorName.lightGrey,
-                                      keyboardType: TextInputType.number,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please enter amount paid';
-                                        }
-                                        return null;
-                                      },
-                                      prefixIcon: const Icon(Icons.money_off,
-                                          color: ColorName.blue200),
-                                      borderRadius: 12,
-                                      isPassword: false,
-                                      label: null,
-                                      suffixIcon: const Padding(
-                                        padding: EdgeInsets.only(right: 8.0),
-                                        child: Text('',
-                                            style: TextStyle(
-                                                color: ColorName.whiteColor)),
+                                          );
+                                        },
+                                        text: 'Add Product',
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 15,
+                                        radius: 20,
+                                        color: ColorName.blue200,
+                                        textColor: Colors.white,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 100.h,
-                                    )
                                   ],
                                 ),
-                              ),
+                                SizedBox(height: 20.h),
+
+                                // Amount Charged & Paid
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          AppText.medium('Amount Charged', color: Colors.black),
+                                          SizedBox(height: 5.h),
+                                          BlocBuilder<SelectedSaleCubit, List<SaleProduct>>(
+                                            bloc: selectedSaleCubit,
+                                            builder: (context, state) {
+                                              amountChargedController.text = selectedSaleCubit.getTotalPrice().toString();
+                                              if (amountChargedController.text != '0.0') {
+                                                formValidationCubit.validateField(amountChargedKey, true);
+                                              } else {
+                                                formValidationCubit.validateField(amountChargedKey, false);
+                                              }
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(color: Color(0xFFBDBDBD)),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                ),
+                                                child: ServicesTextField(
+                                                  controller: amountChargedController,
+                                                  formValidationCubit: formValidationCubit,
+                                                  fieldId: amountChargedKey,
+                                                  fillColor: ColorName.lightGrey,
+                                                  readOnly: true,
+                                                  prefixIcon: const Icon(Icons.attach_money, color: ColorName.blue200),
+                                                  borderRadius: 12,
+                                                  isPassword: false,
+                                                  label: null,
+                                                  suffixIcon: const Padding(
+                                                    padding: EdgeInsets.only(right: 8.0),
+                                                    child: Text('Kshs', style: TextStyle(color: Colors.grey)),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          AppText.medium('Amount Paid', color: Colors.black),
+                                          SizedBox(height: 5.h),
+                                          AnimatedContainer(
+                                            duration: const Duration(milliseconds: 800),
+                                            curve: Curves.easeInOut,
+                                            decoration: BoxDecoration(
+                                              color: ColorName.lightGrey,
+                                              border: Border.all(
+                                                color: Colors.greenAccent.withOpacity(0.7),
+                                                width: 2,
+                                              ),
+                                              borderRadius: BorderRadius.circular(12),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.greenAccent.withOpacity(0.3),
+                                                  blurRadius: 12,
+                                                  spreadRadius: 1,
+                                                ),
+                                              ],
+                                            ),
+                                            child: ServicesTextField(
+                                              controller: amountPaidController,
+                                              formValidationCubit: formValidationCubit,
+                                              fieldId: amountPaidKey,
+                                              fillColor: ColorName.lightGrey,
+                                              readOnly: false,
+                                              prefixIcon: const Icon(Icons.payments, color: ColorName.blue200),
+                                              borderRadius: 12,
+                                              isPassword: false,
+                                              label: null,
+                                              suffixIcon: const Padding(
+                                                padding: EdgeInsets.only(right: 8.0),
+                                                child: Text('Kshs', style: TextStyle(color: Colors.grey)),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20.h),
+                                AppText.medium('Balance to be Paid', color: Colors.black),
+                                SizedBox(height: 5.h),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Color(0xFFBDBDBD)),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ServicesTextField(
+                                    controller: TextEditingController(
+                                      text: 'Kshs ${(double.tryParse(amountChargedController.text) ?? 0) - (double.tryParse(amountPaidController.text) ?? 0)}',
+                                    ),
+                                    formValidationCubit: formValidationCubit,
+                                    fieldId: 'balanceField',
+                                    fillColor: ColorName.lightGrey,
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.account_balance_wallet, color: ColorName.blue200),
+                                    borderRadius: 12,
+                                    isPassword: false,
+                                    label: null,
+                                    suffixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Text('Kshs', style: TextStyle(color: Colors.grey)),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 30.h),
+                              ],
                             ),
                           ),
                         );
@@ -586,7 +441,6 @@ class _AddSaleState extends State<AddSale> {
             },
           ),
         ),
-
         bottomNavigationBar: Container(
           color: Colors.transparent,
           height: 60.h,
@@ -598,9 +452,7 @@ class _AddSaleState extends State<AddSale> {
                 margin: EdgeInsets.only(bottom: 20.h, right: 20.w, left: 20.w),
                 width: 300.w,
                 child: CustomButton(
-                  onTap: isFormValid &&
-                          selectedCustomerCubit.state != null &&
-                          selectedSaleCubit.state.isNotEmpty
+                  onTap: isFormValid && selectedCustomerCubit.state != null && selectedSaleCubit.state.isNotEmpty
                       ? () async {
                           await addSale(false);
                         }
@@ -623,128 +475,63 @@ class _AddSaleState extends State<AddSale> {
             },
           ),
         ),
-        // floatingActionButton:
-        //     BlocBuilder<FormValidationCubit, Map<String, bool>>(
-        //   bloc: formValidationCubit,
-        //   builder: (context, state) {
-        //     bool isFormValid = formValidationCubit.isFormValid();
-        //     return Container(
-        //       margin: EdgeInsets.only(bottom: 20.h),
-        //       width: 300.w,
-        //       child: CustomButton(
-        //         onTap: isFormValid && selectedCustomerCubit.state != null
-        //             ? () async {
-        //                 await addSale(false);
-        //               }
-        //             : isFormValid && widget.data != null
-        //                 ? () async {
-        //                     await addSale(true);
-        //                   }
-        //                 : () {},
-        //         text: 'Submit',
-        //         color:
-        //             isFormValid ? ColorName.primaryColor : ColorName.mainGrey,
-        //         radius: 20,
-        //         fontWeight: FontWeight.normal,
-        //         textColor:
-        //             isFormValid ? ColorName.whiteColor : ColorName.lightGrey,
-        //       ),
-        //     );
-        //   },
-        // ),
-        // floatingActionButtonLocation:
-        //     FloatingActionButtonLocation.miniCenterDocked,
       ),
     );
   }
 
-  Widget _buildCustomerSelectionField(List<CustomersModelRow> customers) {
-    return Container(
-      width: ScreenUtil().screenWidth,
-      height: ScreenUtil().setHeight(50),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        color: ColorName.textfieldColor,
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: ColorName.blackColor),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: BlocBuilder<CustomersCubit, CustomersState>(
-                  bloc: customersCubit,
-                  builder: (context, state) {
-                    if (state is CustomersLoaded) {
-                      return BlocBuilder<SelectedCustomerCubit,
-                          CustomersModelRow?>(
-                        bloc: selectedCustomerCubit,
-                        builder: (context, selectedState) {
-                          final selectedCustomer = selectedCustomerCubit.state;
-                          final selectedCustomerName =
-                              selectedCustomer?.name ?? 'Select Customer';
-                          return DropdownButtonHideUnderline(
-                            child: DropdownButton<CustomersModelRow>(
-                              value: selectedCustomer,
-                              items: state.data
-                                  .map<DropdownMenuItem<CustomersModelRow>>(
-                                (CustomersModelRow category) {
-                                  return DropdownMenuItem<CustomersModelRow>(
-                                    value: category,
-                                    child: Text(
-                                      category.name ?? '',
-                                      style: const TextStyle(
-                                        color: ColorName.blackColor,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  );
-                                },
-                              ).toList(),
-                              onChanged: (CustomersModelRow? newValue) {
-                                selectedCustomerCubit
-                                    .setSelectedCategory(newValue);
-                              },
-                              icon: const Icon(Icons.arrow_drop_down,
-                                  color: ColorName.blackColor),
-                              iconSize: 24,
-                              isExpanded: true,
-                              underline: const SizedBox(),
-                              hint: Text(
-                                selectedCustomerName,
-                                style: TextStyle(
-                                  color: ColorName.mainGrey,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      return SpinKitWave(
-                        size: 20,
-                        itemBuilder: (BuildContext context, int index) {
-                          return const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: ColorName.primaryColor,
-                            ),
-                          );
-                        },
-                      );
-                    }
+  Widget _buildCustomerSelectionField(BuildContext context) {
+    return BlocBuilder<CustomersCubit, CustomersState>(
+      bloc: customersCubit,
+      builder: (context, state) {
+        if (state is CustomersLoaded) {
+          return Container(
+            width: double.infinity,
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: ColorName.textfieldColor,
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: ColorName.blackColor),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<CustomersModelRow>(
+                value: selectedCustomerCubit.state,
+                items: state.data.map<DropdownMenuItem<CustomersModelRow>>(
+                  (CustomersModelRow customer) {
+                    return DropdownMenuItem<CustomersModelRow>(
+                      value: customer,
+                      child: Text(
+                        customer.name ?? '',
+                        style: const TextStyle(
+                          color: ColorName.blackColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    );
                   },
+                ).toList(),
+                onChanged: (CustomersModelRow? newValue) {
+                  selectedCustomerCubit.setSelectedCategory(newValue);
+                },
+                icon: const Icon(Icons.arrow_drop_down, color: ColorName.blackColor),
+                iconSize: 24,
+                isExpanded: true,
+                underline: const SizedBox(),
+                hint: Text(
+                  selectedCustomerCubit.state?.name ?? 'Select Customer',
+                  style: TextStyle(
+                    color: ColorName.mainGrey,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
@@ -812,233 +599,178 @@ class _CenterPopupState extends State<CenterPopup> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                AppBar(
-                  leading: const Icon(Icons.verified_user),
-                  elevation: 0,
-                  title: AppText.medium(
-                    'Product Details',
-                    fontSize: 16,
+                PreferredSize(
+                  preferredSize: const Size.fromHeight(kToolbarHeight),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: AppBar(
+                      leading: const Icon(
+                        Icons.verified_user,
+                        color: Colors.white,
+                      ),
+                      elevation: 0,
+                      backgroundColor: ColorName.primaryColor,
+                      title: AppText.medium(
+                        'Product Details',
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      centerTitle: true,
+                    ),
                   ),
-                  centerTitle: true,
                 ),
                 SizedBox(height: 20.h),
                 AppText.medium(
                   'Product Name',
                   color: Colors.black,
                 ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Column(
-                  children: [
-                    Container(
-                      width: ScreenUtil().screenWidth,
-                      height: ScreenUtil()
-                          .setHeight(50), // Convert 50 to cubic value
-                      padding: const EdgeInsets.only(left: 10),
-                      decoration: BoxDecoration(
-                        color: ColorName.textfieldColor,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: ColorName.blackColor),
+                SizedBox(height: 5.h),
+                Container(
+                  width: ScreenUtil().screenWidth,
+                  height: ScreenUtil().setHeight(50),
+                  padding: const EdgeInsets.only(left: 10),
+                  child: DropdownButtonHideUnderline(
+                    child: Center(
+                      child: BlocBuilder<ProductsCubit, ProductsState>(
+                        bloc: productsCubit,
+                        builder: (context, state) =>
+                            ServicesDropdownField<ProductsModelRow>(
+                          value: productsCubit.selectedProduct,
+                          items: widget.data
+                              .map<DropdownMenuItem<ProductsModelRow>>(
+                                  (ProductsModelRow product) {
+                            return DropdownMenuItem<ProductsModelRow>(
+                              value: product,
+                              child: Text(product.name!,
+                                  style: TextStyle(
+                                      color: ColorName.blackColor,
+                                      fontSize: 14.sp)),
+                            );
+                          }).toList(),
+                          onChanged: (ProductsModelRow? newValue) {
+                            productsCubit.setSelectedProduct(newValue!);
+                            // Autofill item price with sellingPrice
+                            productPriceController.text =
+                                newValue.sellingPrice ?? '';
+                            subTotalCubit.updateProduct(
+                              double.tryParse(productQuantityController.text) ?? 0,
+                              double.tryParse(newValue.sellingPrice ?? '0') ?? 0,
+                            );
+                            setState(() {}); // To update the UI
+                          },
+                          hintText: 'Select Product',
+                          prefixIcon: const Icon(Icons.shopping_cart,
+                              color: ColorName.blue200),
+                          fillColor: ColorName.lightGrey,
+                          borderRadius: 12,
+                        ),
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: Center(
-                          child: BlocBuilder<ProductsCubit, ProductsState>(
-                            bloc: productsCubit,
-                            builder: (context, state) =>
-                                DropdownButton<ProductsModelRow>(
-                              value: productsCubit.selectedProduct,
-                              onChanged: (ProductsModelRow? newValue) {
-                                productsCubit.setSelectedProduct(newValue!);
-                              },
-                              items: widget.data
-                                  .map<DropdownMenuItem<ProductsModelRow>>(
-                                (ProductsModelRow product) {
-                                  return DropdownMenuItem<ProductsModelRow>(
-                                    value: product,
-                                    child: Text(
-                                      product.name!,
-                                      style: TextStyle(
-                                        color: ColorName.blackColor,
-                                        fontSize: 14.sp,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ).toList(),
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14.sp,
-                              ),
-                              dropdownColor: Colors.white,
-                              icon: const Icon(Icons.arrow_drop_down),
-                              hint: Text(
-                                'Select Product',
-                                style: TextStyle(
-                                  color: ColorName.mainGrey,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                              isExpanded: true,
-                              iconSize: 24,
-                              iconEnabledColor: ColorName.mainGrey,
-                              underline: const SizedBox(),
-                              alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText.medium(
+                            'Quantity',
+                            color: Colors.black,
+                          ),
+                          SizedBox(height: 5.h),
+                          ServicesTextField(
+                            controller: productQuantityController,
+                            formValidationCubit: formValidationCubit,
+                            fieldId: prodQuantityKey,
+                            fillColor: ColorName.lightGrey,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter quantity';
+                              }
+                              return null;
+                            },
+                            prefixIcon: const Icon(Icons.shopping_bag,
+                                color: ColorName.blue200),
+                            borderRadius: 12,
+                            isPassword: false,
+                            label: null,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) async {
+                              formValidationCubit.validateField(
+                                  prodQuantityKey, value.isNotEmpty);
+                              subTotalCubit.updateProduct(
+                                double.tryParse(value) ?? 0,
+                                double.tryParse(productPriceController.text) ?? 0,
+                              );
+                              setState(() {});
+                            },
+                            readOnly: false,
+                            suffixIcon: const Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Text('',
+                                  style: TextStyle(color: Colors.grey)),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText.medium(
+                            'Item Price',
+                            color: Colors.black,
+                          ),
+                          SizedBox(height: 5.h),
+                          ServicesTextField(
+                            controller: productPriceController,
+                            formValidationCubit: formValidationCubit,
+                            fieldId: prodPriceKey,
+                            fillColor: ColorName.lightGrey,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a price';
+                              }
+                              return null;
+                            },
+                            prefixIcon: const Icon(Icons.attach_money,
+                                color: ColorName.blue200),
+                            borderRadius: 12,
+                            isPassword: false,
+                            label: null,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) async {
+                              formValidationCubit.validateField(
+                                  prodPriceKey, value.isNotEmpty);
+                              subTotalCubit.updateProduct(
+                                double.tryParse(productQuantityController.text) ??
+                                    0,
+                                double.tryParse(value) ?? 0,
+                              );
+                              setState(() {});
+                            },
+                            readOnly: false,
+                            suffixIcon: const Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                'Kshs',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 9,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                AppText.medium(
-                  'Quantity',
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                TextFormField(
-                  maxLines: 1,
-                  controller: productQuantityController,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a quantity';
-                    }
-
-                    final enteredQuantity = int.tryParse(value);
-                    final availableStock =
-                        productsCubit.selectedProduct?.stock ?? 0;
-
-                    if (enteredQuantity == null) {
-                      return 'Please enter a valid number';
-                    }
-
-                    if (enteredQuantity > availableStock) {
-                      return 'Only $availableStock items available in stock';
-                    }
-
-                    return null;
-                  },
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onTapOutside: (event) {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  onChanged: (value) async {
-                    // Validate the field and calculate the price
-                    formValidationCubit.validateField(
-                      prodQuantityKey,
-                      value.isNotEmpty,
-                    );
-
-                    final enteredQuantity = double.tryParse(value) ?? 0;
-                    final sellingPrice = double.tryParse(
-                            productsCubit.selectedProduct!.sellingPrice!) ??
-                        0.0;
-
-                    // Update the price field
-                    final calculatedPrice = enteredQuantity * sellingPrice;
-                    productPriceController.text =
-                        calculatedPrice.toStringAsFixed(2);
-
-                    formValidationCubit.validateField(
-                      prodPriceKey,
-                      value.isNotEmpty,
-                    );
-
-                    subTotalCubit.updateProduct(
-                      enteredQuantity,
-                      calculatedPrice,
-                    );
-                  },
-                  decoration: InputDecoration(
-                    hintText:
-                        "Write a summary and any detail about your Product",
-                    hintStyle: TextStyle(
-                      color: ColorName.mainGrey,
-                      fontSize: 14.sp,
-                      fontFamily: FontFamily.lato,
-                    ),
-                    filled: true,
-                    fillColor: ColorName.textfieldColor,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: ColorName.lightGrey),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: ColorName.lightGrey),
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0),
-                  ),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: ColorName.blackColor,
-                    fontSize: 16.sp,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                AppText.medium(
-                  'Price',
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                TextFormField(
-                  maxLines: 1,
-                  controller: productPriceController,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-
-                    return null;
-                  },
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onTapOutside: (event) {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  onChanged: (value) async {
-                    formValidationCubit.validateField(
-                      prodPriceKey,
-                      value.isNotEmpty,
-                    );
-                    subTotalCubit.updateProduct(
-                      double.tryParse(productQuantityController.text) ?? 0,
-                      double.tryParse(value) ?? 0,
-                    );
-                  },
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(
-                      color: ColorName.mainGrey,
-                      fontSize: 14.sp,
-                      fontFamily: FontFamily.lato,
-                    ),
-                    filled: true,
-                    fillColor: ColorName.textfieldColor,
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: ColorName.lightGrey),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: ColorName.lightGrey),
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0),
-                  ),
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: ColorName.blackColor,
-                    fontSize: 16.sp,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 BlocBuilder<SubTotalCubit, double>(
                   bloc: subTotalCubit,
                   builder: (context, state) {
@@ -1060,9 +792,7 @@ class _CenterPopupState extends State<CenterPopup> {
                     );
                   },
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1088,13 +818,17 @@ class _CenterPopupState extends State<CenterPopup> {
                           height: 30.h,
                           child: CustomButton(
                             onTap: () async {
+                              final unitPrice = double.tryParse(productPriceController.text) ?? 0;
+                              final qty = int.tryParse(productQuantityController.text) ?? 0;
+                              final total = (unitPrice * qty).toStringAsFixed(2);
+
                               widget.selectedSaleCubit.addProduct(
                                 SaleProduct(
                                   productId: productsCubit.selectedProduct!.id!,
-                                  productName:
-                                      productsCubit.selectedProduct!.name!,
-                                  salePrice: subTotalCubit.state.toString(),
+                                  productName: productsCubit.selectedProduct!.name!,
+                                  salePrice: productPriceController.text, // unit price
                                   quantity: productQuantityController.text,
+                                  totalAmount: total,
                                 ),
                               );
                               Navigator.pop(context);
@@ -1106,10 +840,10 @@ class _CenterPopupState extends State<CenterPopup> {
                             color: isFormValid &&
                                     productsCubit.selectedProduct != null
                                 ? ColorName.blue200
-                                : ColorName.mainGrey,
+                                : ColorName.primaryColor,
                             textColor: isFormValid &&
                                     productsCubit.selectedProduct != null
-                                ? ColorName.whiteColor
+                                ? ColorName.primaryColor
                                 : ColorName.lightGrey,
                           ),
                         );

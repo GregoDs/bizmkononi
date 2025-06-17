@@ -81,7 +81,7 @@ class _AddBusinessState extends State<AddBusiness> {
       nameController.text = widget.data!.name!;
       emailController.text = widget.data!.businessEmail!;
       phoneController.text = widget.data!.businessPhone!;
-      descrController.text = widget.data!.description!;
+      descrController.text = widget.data!.description ?? '';
       latitudeController.text = widget.data!.latitude.toString();
       longitudeController.text = widget.data!.longitude.toString();
       locationDetailsController.text = widget.data!.locationDetails!;
@@ -97,7 +97,8 @@ class _AddBusinessState extends State<AddBusiness> {
     formValidationCubit.validateField(nameKey, widget.data != null);
     formValidationCubit.validateField(emailKey, widget.data != null);
     formValidationCubit.validateField(phoneKey, widget.data != null);
-    // Don't validate description field here since it's optional
+    // Initialize description field as valid since it's optional
+    formValidationCubit.validateField(descrKey, true);
     formValidationCubit.validateField(locKey, widget.data != null);
     formValidationCubit.validateField(locDescr, widget.data != null);
   }
@@ -105,8 +106,6 @@ class _AddBusinessState extends State<AddBusiness> {
   @override
   void initState() {
     setDatafields();
-    // Initialize description field validation as valid since it's optional
-    formValidationCubit.validateField(descrKey, true);
     super.initState();
   }
 
@@ -392,7 +391,6 @@ class _AddBusinessState extends State<AddBusiness> {
                               ),
                               SizedBox(height: 20.h),
                               AppText.medium(
-                                'Description (Optional)',
                                 'Description (Optional)',
                                 color: Colors.black,
                               ),

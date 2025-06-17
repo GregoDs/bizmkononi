@@ -21,7 +21,7 @@ class SelectedSaleCubit extends Cubit<List<SaleProduct>> {
   double getTotalPrice() {
     double totalPrice = 0.0;
     for (var product in state) {
-      totalPrice += double.tryParse(product.salePrice) ?? 0.0;
+      totalPrice += double.tryParse(product.totalAmount) ?? 0.0;
     }
     return totalPrice;
   }

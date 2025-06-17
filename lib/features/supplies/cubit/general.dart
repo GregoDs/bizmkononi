@@ -20,7 +20,7 @@ class SelectedSupplyCubit extends Cubit<List<SupplyProduct>> {
   double getTotalPrice() {
     double totalPrice = 0.0;
     for (var product in state) {
-      totalPrice += double.tryParse(product.supplyPrice) ?? 0.0;
+      totalPrice += double.tryParse(product.totalAmount) ?? 0.0;
     }
     return totalPrice;
   }

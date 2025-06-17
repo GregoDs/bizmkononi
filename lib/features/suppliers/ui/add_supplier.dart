@@ -45,7 +45,7 @@ class _AddSupplierState extends State<AddSupplier> {
       'name': nameController.text,
       'email': emailController.text,
       'phone': phoneController.text,
-      'description': descrController.text,
+      'description': descrController.text.isEmpty ? '' : descrController.text,
     };
     isEdit
         ? suppliersCubit.editSupplier(
@@ -63,12 +63,12 @@ class _AddSupplierState extends State<AddSupplier> {
       nameController.text = widget.data!.name!;
       emailController.text = widget.data!.email!;
       phoneController.text = widget.data!.phone!;
-      descrController.text = widget.data!.description!;
+      descrController.text = widget.data!.description ?? '';
     }
     formValidationCubit.validateField(nameKey, widget.data != null);
     formValidationCubit.validateField(emailKey, widget.data != null);
     formValidationCubit.validateField(phoneKey, widget.data != null);
-    formValidationCubit.validateField(descrKey, widget.data != null);
+    formValidationCubit.validateField(descrKey, true);
   }
 
   @override
@@ -271,8 +271,9 @@ class _AddSupplierState extends State<AddSupplier> {
                                   maxLines: 5,
                                   controller: descrController,
                                   keyboardType: TextInputType.multiline,
-                                  validator:
-                                      Functions().noSpecialCharactersValidator,
+                                  validator: (value) {
+                                    return null;
+                                  },
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   onTapOutside: (event) {
@@ -280,10 +281,7 @@ class _AddSupplierState extends State<AddSupplier> {
                                         ?.unfocus();
                                   },
                                   onChanged: (value) {
-                                    formValidationCubit.validateField(
-                                      descrKey,
-                                      value.isNotEmpty,
-                                    );
+                                    // No need to validate on change since it's optional
                                   },
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.description,

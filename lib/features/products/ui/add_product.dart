@@ -74,12 +74,12 @@ class _AddProductState extends State<AddProduct> {
       'name': formatString(nameController.text),
       'categoryName': selectedCategoryCubit.state!.name,
       'categoryId': selectedCategoryCubit.state!.id,
-      'description': descrController.text,
+      'description': descrController.text.isEmpty ? '' : descrController.text,
       'size': sizeController.text,
       'unit': unitController.text,
       'buyingPrice': bpController.text,
       'sellingPrice': spController.text,
-      'tags': tagsController.text,
+      'tags': tagsController.text.isEmpty ? '' : tagsController.text,
       'productType': productTypeCubit.state.name,
     };
     isEdit
@@ -99,10 +99,10 @@ class _AddProductState extends State<AddProduct> {
       nameController.text = widget.data!.name!;
       sizeController.text = widget.data!.size.toString();
       unitController.text = widget.data!.unit!;
-      descrController.text = widget.data!.description!;
+      descrController.text = widget.data!.description ?? '';
       bpController.text = widget.data!.buyingPrice!;
       spController.text = widget.data!.sellingPrice!;
-      tagsController.text = widget.data!.tags!;
+      tagsController.text = widget.data!.tags ?? '';
       typeController.text = widget.data!.productType!;
       if (widget.data!.productType! == 'SERVICE') {
         productTypeCubit.setProductType(ProductType.PRODUCT);
@@ -115,10 +115,11 @@ class _AddProductState extends State<AddProduct> {
     formValidationCubit.validateField(typeKey, widget.data != null);
     formValidationCubit.validateField(sizeKey, widget.data != null);
     formValidationCubit.validateField(unitKey, widget.data != null);
-    formValidationCubit.validateField(descrKey, widget.data != null);
+    // Initialize optional fields as valid
+    formValidationCubit.validateField(descrKey, true);
     formValidationCubit.validateField(bpKey, widget.data != null);
     formValidationCubit.validateField(spKey, widget.data != null);
-    formValidationCubit.validateField(tagsKey, widget.data != null);
+    formValidationCubit.validateField(tagsKey, true);
   }
 
   @override
@@ -422,7 +423,7 @@ class _AddProductState extends State<AddProduct> {
                               Container(
                                 width: ScreenUtil().screenWidth,
                                 height: ScreenUtil()
-                                    .setHeight(50), // Convert 50 to cubic value
+                                    .setHeight(50),
                                 padding: const EdgeInsets.only(left: 10),
                                 decoration: BoxDecoration(
                                   color: ColorName.textfieldColor,
@@ -467,6 +468,7 @@ class _AddProductState extends State<AddProduct> {
                                                     ? ColorName.mainGrey
                                                     : Colors.black,
                                                 fontWeight: FontWeight.normal,
+                                                fontFamily: FontFamily.lato,
                                               ),
                                               textAlign: TextAlign.center,
                                             ),
@@ -481,7 +483,7 @@ class _AddProductState extends State<AddProduct> {
                                                 ProductType.SERVICE);
                                           } else if (newValue == 'SERVICE') {
                                             productTypeCubit.setProductType(
-                                                ProductType.PRODUCT);
+                                                ProductType.SERVICE);
                                           } else if (newValue == 'PRODUCT') {
                                             productTypeCubit.setProductType(
                                                 ProductType.PRODUCT);
@@ -538,7 +540,6 @@ class _AddProductState extends State<AddProduct> {
                               ),
                               AppText.medium(
                                 'Description (Optional)',
-                                'Description (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -548,16 +549,17 @@ class _AddProductState extends State<AddProduct> {
                                 maxLines: 5,
                                 controller: descrController,
                                 keyboardType: TextInputType.multiline,
-                                validator:
-                                    Functions().noSpecialCharactersValidator,
+                                validator: (value) {
+                                  // Description is optional, so always return null
+                                  return null;
+                                },
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 onTapOutside: (event) {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                 },
                                 onChanged: (value) {
-                                  formValidationCubit.validateField(
-                                      descrKey, value.isNotEmpty);
+                                  // No need to validate on change since it's optional
                                 },
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.description,
@@ -590,13 +592,14 @@ class _AddProductState extends State<AddProduct> {
                                   fontWeight: FontWeight.normal,
                                   color: ColorName.blackColor,
                                   fontSize: 16.sp,
+                                  fontFamily: FontFamily.lato,
                                 ),
                               ),
                               SizedBox(
                                 height: 20.h,
                               ),
                               AppText.medium(
-                                'Buying Price e.g 1000 (Optional)',
+                                'Buying Price e.g 1000',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -608,10 +611,8 @@ class _AddProductState extends State<AddProduct> {
                                 fieldId: bpKey,
                                 keyboardType: TextInputType.number,
                                 fillColor: ColorName.textfieldColor,
-                                validator:
-                                    Functions().noSpecialCharactersValidator,
-                                prefixIcon: Icon(Icons.attach_money,
-                                    color: ColorName.primaryColor),
+                                validator: Functions().noSpecialCharactersValidator,
+                                prefixIcon: Icon(Icons.attach_money, color: ColorName.primaryColor),
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -639,7 +640,6 @@ class _AddProductState extends State<AddProduct> {
                               ),
                               AppText.medium(
                                 'Tags (Optional)',
-                                'Tags (Optional)',
                                 color: Colors.black,
                               ),
                               SizedBox(
@@ -651,10 +651,7 @@ class _AddProductState extends State<AddProduct> {
                                 fieldId: tagsKey,
                                 fillColor: ColorName.textfieldColor,
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter some text';
-                                  }
-
+                                  // Tags are optional, so always return null
                                   return null;
                                 },
                                 prefixIcon: Icon(Icons.label,

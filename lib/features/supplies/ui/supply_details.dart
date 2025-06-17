@@ -102,7 +102,7 @@ class _SupplyDetailsState extends State<SupplyDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Make Sale',
+                          'View Supply detail',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             color: Colors.white,

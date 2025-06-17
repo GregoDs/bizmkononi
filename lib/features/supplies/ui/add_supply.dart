@@ -322,16 +322,14 @@ class _AddSupplyState extends State<AddSupply> {
                                     'Selected Products',
                                     color: Colors.black,
                                   ),
-                                  SizedBox(
-                                    height: 5.h,
-                                  ),
+                                  SizedBox(height: 5.h),
                                   Container(
-                                    height: 200,
-                                    width: ScreenUtil().screenWidth,
-                                    padding: EdgeInsets.all(8.h),
+                                    height: 220,
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(16),
                                     decoration: BoxDecoration(
-                                      color: ColorName.textfieldColor,
-                                      borderRadius: BorderRadius.circular(15),
+                                      color: const Color(0xFFF6F8FB),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: BlocBuilder<SelectedSupplyCubit,
                                         List<SupplyProduct>>(
@@ -345,14 +343,17 @@ class _AddSupplyState extends State<AddSupply> {
                                               children: [
                                                 Image.asset(
                                                   'assets/images/emptyData.png',
-                                                  width:
-                                                      140, // Adjust size as needed
+                                                  width: 140,
                                                   height: 140,
                                                   fit: BoxFit.contain,
                                                 ),
-                                                const SizedBox(height: 12),
+                                                const SizedBox(height: 16),
                                                 AppText.medium(
                                                   'Please add an item',
+                                                  color: const Color(
+                                                      0xFF2B4B6A),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ],
                                             ),
@@ -365,16 +366,24 @@ class _AddSupplyState extends State<AddSupply> {
                                             var item =
                                                 selectedSupplyState[index];
                                             return Container(
-                                              padding: EdgeInsets.all(8.h),
+                                              padding: EdgeInsets.all(12),
                                               margin: EdgeInsets.symmetric(
-                                                vertical: 3.h,
+                                                vertical: 6,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: ColorName.whiteColor,
+                                                color: Colors.white,
                                                 borderRadius:
                                                     BorderRadius.circular(
-                                                  20,
+                                                  16,
                                                 ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.07),
+                                                    blurRadius: 4,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
                                               ),
                                               child: Row(
                                                 mainAxisAlignment:
@@ -382,9 +391,6 @@ class _AddSupplyState extends State<AddSupply> {
                                                         .spaceBetween,
                                                 children: [
                                                   Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
                                                     children: [
                                                       AppText.medium(
                                                         item.productName,
@@ -422,14 +428,13 @@ class _AddSupplyState extends State<AddSupply> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
+                                  SizedBox(height: 16),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        height: 30,
-                                        width: 200,
+                                        height: 40,
+                                        width: 180,
                                         child: CustomButton(
                                           onTap: () {
                                             showDialog(
@@ -445,9 +450,12 @@ class _AddSupplyState extends State<AddSupply> {
                                           },
                                           text: 'Add Product',
                                           fontWeight: FontWeight.normal,
-                                          fontSize: 14,
+                                          fontSize: 15,
+                                          radius: 20,
+                                          color: ColorName.blue200,
+                                          textColor: Colors.white,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   SizedBox(
@@ -909,7 +917,7 @@ class _CenterPopupState extends State<CenterPopup> {
                             readOnly: false,
                             suffixIcon: const Padding(
                               padding: EdgeInsets.only(right: 8.0),
-                              child: Text('Kshs',
+                              child: Text('',
                                   style: TextStyle(color: Colors.grey)),
                             ),
                           ),
@@ -958,8 +966,13 @@ class _CenterPopupState extends State<CenterPopup> {
                             readOnly: false,
                             suffixIcon: const Padding(
                               padding: EdgeInsets.only(right: 8.0),
-                              child: Text('Kshs',
-                                  style: TextStyle(color: Colors.grey)),
+                              child: Text(
+                                  'Kshs',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 9,  
+                                  ),
+                                ),
                             ),
                           ),
                         ],
@@ -1019,13 +1032,17 @@ class _CenterPopupState extends State<CenterPopup> {
                           height: 30.h,
                           child: CustomButton(
                             onTap: () async {
+                              final unitPrice = double.tryParse(productPriceController.text) ?? 0;
+                              final qty = int.tryParse(productQuantityController.text) ?? 0;
+                              final total = (unitPrice * qty).toStringAsFixed(2);
+
                               widget.selectedSupplyCubit.addProduct(
                                 SupplyProduct(
                                   productId: productsCubit.selectedProduct!.id!,
-                                  productName:
-                                      productsCubit.selectedProduct!.name!,
-                                  supplyPrice: subTotalCubit.state.toString(),
+                                  productName: productsCubit.selectedProduct!.name!,
+                                  supplyPrice: productPriceController.text, // unit price
                                   quantity: productQuantityController.text,
+                                  totalAmount: total,
                                 ),
                               );
                               Navigator.pop(context);
